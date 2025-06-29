@@ -155,6 +155,7 @@ const getProfile = async (req, res) => {
       emailId: user.emailId || "",
       role: user.role || "user",
       problemSolved: user.problemSolved?.length || 0,
+      problems: user.problemSolved,
       joinDate, // Computed creation date
     };
 
