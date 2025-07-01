@@ -1,5 +1,5 @@
 const Post = require("../models/blogPost");
-const user = require("../models/user"); // Assuming you have a User model
+const User = require("../models/user"); // Assuming you have a User model
 
 // @desc    Get all posts
 // @route   GET /api/discuss/posts
@@ -37,9 +37,30 @@ const getPostById = async (req, res) => {
 // @desc    Create a new post
 // @route   POST /api/discuss/posts
 // @access  Private
+// const createPost = async (req, res) => {
+//   const { title, content, tags } = req.body;
+//   //   console.log(req.result.id);
+//   if (!title || !content) {
+//     return res.status(400).json({ message: "Title and content are required" });
+//   }
+
+//   try {
+//     const post = new Post({
+//       title,
+//       content,
+//       tags: tags.split(",").map((tag) => tag.trim()), // Assuming tags are a comma-separated string
+//       user: req.result.id,
+//     });
+
+//     const createdPost = await post.save();
+//     res.status(201).json(createdPost);
+//   } catch (error) {
+//     res.status(500).json({ message: error.message });
+//   }
+// };
+
 const createPost = async (req, res) => {
   const { title, content, tags } = req.body;
-  //   console.log(req.result.id);
   if (!title || !content) {
     return res.status(400).json({ message: "Title and content are required" });
   }
@@ -48,11 +69,17 @@ const createPost = async (req, res) => {
     const post = new Post({
       title,
       content,
-      tags: tags.split(",").map((tag) => tag.trim()), // Assuming tags are a comma-separated string
+      tags: tags.split(",").map((tag) => tag.trim()),
       user: req.result.id,
     });
 
     const createdPost = await post.save();
+
+    // Add the post to the user's posts array
+    await User.findByIdAndUpdate(req.result.id, {
+      $push: { posts: createdPost._id },
+    });
+
     res.status(201).json(createdPost);
   } catch (error) {
     res.status(500).json({ message: error.message });

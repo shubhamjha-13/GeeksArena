@@ -134,9 +134,56 @@ const deleteProfile = async (req, res) => {
   }
 };
 
+// const getProfile = async (req, res) => {
+//   try {
+//     const user = req.result;
+
+//     // Calculate account creation date
+//     const joinDate = user.createdAt
+//       ? new Date(user.createdAt).toLocaleDateString("en-US", {
+//           year: "numeric",
+//           month: "long",
+//           day: "numeric",
+//         })
+//       : "Unknown";
+
+//     // Build safe response object
+//     const userProfile = {
+//       _id: user._id,
+//       firstName: user.firstName || "",
+//       lastName: user.lastName || "",
+//       emailId: user.emailId || "",
+//       role: user.role || "user",
+//       problemSolved: user.problemSolved?.length || 0,
+//       problems: user.problemSolved,
+//       joinDate, // Computed creation date
+//     };
+
+//     // Add optional fields only if they exist
+//     if (user.age !== undefined && user.age !== null) {
+//       userProfile.age = user.age;
+//     }
+
+//     res.status(200).json(userProfile);
+//   } catch (err) {
+//     res.status(500).json({
+//       message: err.message || "Internal server error",
+//     });
+//   }
+// };
+
 const getProfile = async (req, res) => {
   try {
-    const user = req.result;
+    const user = await User.findById(req.result._id)
+      .populate({
+        path: "problemSolved",
+        select: "_id title difficulty tags", // Add any other problem fields you want to include
+      })
+      .populate({
+        path: "posts", // Assuming you have a 'posts' reference in your User model
+        select: "_id title content tags createdAt", // Select the fields you want
+        options: { sort: { createdAt: -1 } }, // Sort by newest first
+      });
 
     // Calculate account creation date
     const joinDate = user.createdAt
@@ -154,9 +201,11 @@ const getProfile = async (req, res) => {
       lastName: user.lastName || "",
       emailId: user.emailId || "",
       role: user.role || "user",
-      problemSolved: user.problemSolved?.length || 0,
-      problems: user.problemSolved,
-      joinDate, // Computed creation date
+      problemSolvedCount: user.problemSolved?.length || 0,
+      problems: user.problemSolved || [],
+      postCount: user.posts?.length || 0, // Add count of posts
+      posts: user.posts || [], // Include the posts array
+      joinDate,
     };
 
     // Add optional fields only if they exist
