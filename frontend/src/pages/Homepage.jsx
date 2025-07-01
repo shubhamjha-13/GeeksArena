@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import axiosClient from "../utils/axiosClient";
 import { logoutUser } from "../authSlice";
 import Navbar from "../components/Navbar";
+import Button2 from "../components/button2";
 
 function Homepage() {
   const dispatch = useDispatch();
@@ -130,6 +131,8 @@ function Homepage() {
                       Solved
                     </div>
                   )}
+
+                  <NavLink to={`/problem/${problem._id}`}><Button2 /></NavLink> 
                 </div>
 
                 <div className="flex gap-2">

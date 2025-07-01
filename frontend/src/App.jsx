@@ -13,6 +13,7 @@ import AdminDelete from "./components/AdminDelete";
 import AdminUpload from "./components/AdminUpload";
 import Landing from "./pages/Landing";
 import DiscussionPage from "./pages/DiscussionPage";
+import Profile from "./pages/Profile";
 function App() {
   const dispatch = useDispatch();
   const { isAuthenticated, user, loading } = useSelector((state) => state.auth);
@@ -46,12 +47,18 @@ function App() {
           }
         ></Route>
         <Route
+          path="/profile"
+          element={
+            isAuthenticated ? <Profile></Profile> : <Navigate to="/signup" />
+          }
+        ></Route>
+        <Route
           path="/login"
           element={isAuthenticated ? <Navigate to="/" /> : <Login></Login>}
         ></Route>
         <Route
           path="/discuss"
-          element={isAuthenticated ? <Navigate to="/" /> : <DiscussionPage />}
+          element={isAuthenticated ?  <DiscussionPage /> : <Signup></Signup>}
         />
         <Route
           path="/signup"
