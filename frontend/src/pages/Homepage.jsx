@@ -132,7 +132,7 @@ function Homepage() {
                     </div>
                   )}
 
-                  <Button2 />
+                  <NavLink to={`/problem/${problem._id}`}><Button2 /></NavLink> 
                 </div>
 
                 <div className="flex gap-2">

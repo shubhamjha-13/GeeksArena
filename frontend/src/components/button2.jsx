@@ -35,13 +35,12 @@ const StyledWrapper = styled.div`
     border-radius: 40px;
     justify-content: space-between;
     align-items: center;
-    border: none;
     cursor: pointer;
   }
   .icon-Container {
     width: 45px;
     height: 45px;
-    background-color: #f59aff;
+    background-color:rgb(3, 114, 26);
     display: flex;
     align-items: center;
     justify-content: center;

@@ -1,10 +1,47 @@
 // src/pages/Profile.js
-import React from 'react';
-import { useDispatch, useSelector } from "react-redux";
+import React, { useState, useEffect } from 'react';
+import axiosClient from "../utils/axiosClient";
 import Navbar from "../components/Navbar";
 
 export default function Profile() {
-    const { user } = useSelector((state) => state.auth);
+  const [user, setUserProfile] = useState({
+    _id: '',
+    firstName: '',
+    lastName: '',
+    emailId: '',
+    role: 'user',
+    problemSolved: 0,
+    problems: [],
+    joinDate: ''
+  });
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const fetchProfile = async () => {
+      try {
+        const response = await axiosClient.get('/user/getProfile');
+        setUserProfile({
+          _id: response.data._id || '',
+          firstName: response.data.firstName || '',
+          lastName: response.data.lastName || '',
+          emailId: response.data.emailId || '',
+          role: response.data.role || 'user',
+          problemSolved: response.data.problemSolved?.length || 0,
+          problems: response.data.problemSolved || [],
+          joinDate: response.data.joinDate || new Date().toISOString()
+        });
+        setLoading(false);
+      } catch (err) {
+        console.error("Error fetching profile:", err);
+        setError(err.message || 'Failed to load profile');
+        setLoading(false);
+      }
+    };
+
+    fetchProfile();
+  }, []);
+
   // User data (would normally come from API)
   const userData = {
     username: "code_master",
@@ -54,8 +91,8 @@ export default function Profile() {
             <div className="flex-1 text-center md:text-left">
               <div className="flex flex-col md:flex-row md:items-center justify-between">
                 <div>
-                  <h1 className="text-2xl md:text-3xl font-bold text-gray-900">{user?.firstName}</h1>
-                  <p className="text-gray-600 mt-1">@{userData.username}</p>
+                  <h1 className="text-2xl md:text-3xl font-bold text-gray-900">{user.firstName}</h1>
+                  <p className="text-gray-600 mt-1">{user.emailId}</p>
                 </div>
                 <div className="mt-4 md:mt-0">
                   <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-yellow-100 text-yellow-800">
@@ -84,7 +121,7 @@ export default function Profile() {
               </div>
               
               <div className="mt-4">
-                <p className="text-gray-600 text-sm">Member since {userData.joinDate}</p>
+                <p className="text-gray-600 text-sm">Member since {user.joinDate}</p>
               </div>
             </div>
           </div>
@@ -106,7 +143,7 @@ export default function Profile() {
                   <div className="w-full bg-gray-200 rounded-full h-2.5">
                     <div 
                       className="bg-green-600 h-2.5 rounded-full" 
-                      style={{ width: `${(userData.easySolved / 150) * 100}%` }}
+                      style={{ width: `${(userData.easySolved / 5) * 100}%` }}
                     ></div>
                   </div>
                 </div>
@@ -119,7 +156,7 @@ export default function Profile() {
                   <div className="w-full bg-gray-200 rounded-full h-2.5">
                     <div 
                       className="bg-yellow-500 h-2.5 rounded-full" 
-                      style={{ width: `${(userData.mediumSolved / 200) * 100}%` }}
+                      style={{ width: `${(userData.mediumSolved / 2) * 100}%` }}
                     ></div>
                   </div>
                 </div>
