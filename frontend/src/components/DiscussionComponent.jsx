@@ -1,6 +1,7 @@
 // src/components/DiscussionComponent.jsx
 import React, { useState, useEffect } from "react";
 import discussionService from "../utils/discusssionService";
+import CreatePost from "./CreatePost";
 
 const DiscussionComponent = () => {
   const [posts, setPosts] = useState([]);
@@ -9,6 +10,7 @@ const DiscussionComponent = () => {
     content: "",
     tags: "",
   });
+  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [newComments, setNewComments] = useState({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -39,13 +41,13 @@ const DiscussionComponent = () => {
   }, []);
 
   // Handle post creation
-  const handleCreatePost = async (e) => {
-    e.preventDefault();
+  const handleCreatePost = async (postData) => {
     try {
-      const response = await discussionService.createPost(newPost);
+      const response = await discussionService.createPost(postData);
       setPosts([response.data, ...posts]);
       setNewPost({ title: "", content: "", tags: "" });
       setError(null);
+      setIsCreateModalOpen(false); // Close modal after successful creation
     } catch (error) {
       setError("Failed to create post");
       console.error("Failed to create post:", error);
@@ -95,63 +97,35 @@ const DiscussionComponent = () => {
 
   return (
     <div className="max-w-4xl mx-auto p-4">
-      {/* Create Post Form */}
-      <div className="bg-white rounded-lg shadow-md p-6 mb-8">
-        <h2 className="text-2xl font-bold mb-4">Create New Post</h2>
-        <form onSubmit={handleCreatePost}>
-          <div className="mb-4">
-            <label className="block text-gray-700 mb-2" htmlFor="title">
-              Title
-            </label>
-            <input
-              type="text"
-              id="title"
-              name="title"
-              value={newPost.title}
-              onChange={handleInputChange}
-              className="w-full px-3 py-2 border rounded-md"
-              required
-            />
-          </div>
+      {/* Floating Create Button */}
+      <button
+        onClick={() => setIsCreateModalOpen(true)}
+        className="fixed bottom-8 right-8 z-10 bg-blue-600 text-white rounded-full p-4 shadow-lg hover:bg-blue-700 transition-all duration-300 transform hover:scale-110"
+        aria-label="Create new post"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          className="h-8 w-8"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={2}
+            d="M12 4v16m8-8H4"
+          />
+        </svg>
+      </button>
 
-          <div className="mb-4">
-            <label className="block text-gray-700 mb-2" htmlFor="content">
-              Content
-            </label>
-            <textarea
-              id="content"
-              name="content"
-              value={newPost.content}
-              onChange={handleInputChange}
-              className="w-full px-3 py-2 border rounded-md min-h-[100px]"
-              required
-            />
-          </div>
-
-          <div className="mb-4">
-            <label className="block text-gray-700 mb-2" htmlFor="tags">
-              Tags (comma separated)
-            </label>
-            <input
-              type="text"
-              id="tags"
-              name="tags"
-              value={newPost.tags}
-              onChange={handleInputChange}
-              className="w-full px-3 py-2 border rounded-md"
-              placeholder="e.g., javascript, react, nodejs"
-            />
-          </div>
-
-          <button
-            type="submit"
-            className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700"
-          >
-            Create Post
-          </button>
-        </form>
-      </div>
-
+      {/* Create Post Modal */}
+      <CreatePost 
+        isOpen={isCreateModalOpen}
+        onClose={() => setIsCreateModalOpen(false)}
+        onCreatePost={handleCreatePost}
+      />
+        
       {/* Posts List */}
       <div className="space-y-8">
         {posts.length === 0 ? (
