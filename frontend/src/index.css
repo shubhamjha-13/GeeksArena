@@ -38,7 +38,7 @@ body {
   background: #9ca3af;
   margin: 0 2px;
   border-radius: 4px;
-  animation: wave 1.2s ease-in-out infinite;
+  animation: wave 1.5s ease-in-out infinite;
 }
 
 @keyframes wave {
@@ -87,4 +87,18 @@ body {
 
 .chat-textarea::placeholder {
   color: #a0aec0;
+}
+/* Custom blink animation */
+.blink {
+  animation: blink-animation 1s infinite;
+}
+
+@keyframes blink-animation {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.3;
+  }
 }

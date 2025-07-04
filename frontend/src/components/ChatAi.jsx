@@ -79,7 +79,7 @@ function ChatAi({ problem }) {
   };
 
   return (
-    <div className="flex flex-col h-full">
+    <div className="flex flex-col h-full bg-gradient-to-br from-gray-900 to-gray-800 rounded-xl overflow-hidden border border-gray-700 shadow-xl">
       <div className="flex-1 overflow-y-auto p-4 space-y-4">
         {messages.map((msg, index) => (
           <div
@@ -98,13 +98,14 @@ function ChatAi({ problem }) {
               ) : (
                 <Typewriter
                   options={{
-                    delay: 20,
-                    cursor: "▋",
+                    delay: 40,
+                    cursor: "█",
                     cursorClassName: "text-primary-content opacity-70",
                   }}
                   onInit={(typewriter) => {
                     typewriter
                       .typeString(msg.parts[0].text)
+                      .pauseFor(2000)
                       .callFunction(() => {
                         // Mark as complete when done
                         setMessages((prev) =>
