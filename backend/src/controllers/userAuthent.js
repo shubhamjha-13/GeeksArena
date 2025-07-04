@@ -176,13 +176,13 @@ const getProfile = async (req, res) => {
   try {
     const user = await User.findById(req.result._id)
       .populate({
-        path: "problemSolved",
-        select: "_id title difficulty tags", // Add any other problem fields you want to include
+        path: "problemSolved", // Change 'problem' to 'problemSolved'
+        select: "_id title difficulty tags",
       })
       .populate({
-        path: "posts", // Assuming you have a 'posts' reference in your User model
-        select: "_id title content tags createdAt", // Select the fields you want
-        options: { sort: { createdAt: -1 } }, // Sort by newest first
+        path: "posts",
+        select: "_id title content tags createdAt",
+        options: { sort: { createdAt: -1 } },
       });
 
     // Calculate account creation date
@@ -194,6 +194,7 @@ const getProfile = async (req, res) => {
         })
       : "Unknown";
 
+    // console.log(JSON.stringify(user, null, 2)); // Pretty-print the entire user object
     // Build safe response object
     const userProfile = {
       _id: user._id,
@@ -202,7 +203,7 @@ const getProfile = async (req, res) => {
       emailId: user.emailId || "",
       role: user.role || "user",
       problemSolvedCount: user.problemSolved?.length || 0,
-      problems: user.problemSolved || [],
+      problemsSolved: user.problemSolved || [],
       postCount: user.posts?.length || 0, // Add count of posts
       posts: user.posts || [], // Include the posts array
       joinDate,
