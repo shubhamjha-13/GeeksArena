@@ -323,7 +323,14 @@ const ProblemPage = () => {
                 {activeLeftTab === "submissions" && (
                   <SubmissionHistory problemId={problemId} />
                 )}
-                {activeLeftTab === "chatAI" && <ChatAi problem={problem} />}
+                {activeLeftTab === "chatAI" &&
+                  (problem ? (
+                    <ChatAi problem={problem} />
+                  ) : (
+                    <div className="flex justify-center items-center h-full">
+                      <span className="loading loading-spinner loading-lg"></span>
+                    </div>
+                  ))}
               </>
             )}
           </div>

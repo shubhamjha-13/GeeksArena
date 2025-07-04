@@ -29,3 +29,62 @@ body {
 ::-webkit-scrollbar-thumb:hover {
   background: #334155;
 }
+
+/* Add this to your src/index.css or src/App.css file */
+.wave-bar {
+  display: inline-block;
+  width: 4px;
+  height: 18px;
+  background: #9ca3af;
+  margin: 0 2px;
+  border-radius: 4px;
+  animation: wave 1.2s ease-in-out infinite;
+}
+
+@keyframes wave {
+  0%,
+  100% {
+    transform: scaleY(0.4);
+  }
+  50% {
+    transform: scaleY(1);
+  }
+}
+
+.animation-delay-100 {
+  animation-delay: -1.1s;
+}
+
+.animation-delay-200 {
+  animation-delay: -1s;
+}
+
+.animation-delay-300 {
+  animation-delay: -0.9s;
+}
+
+.animation-delay-400 {
+  animation-delay: -0.8s;
+}
+
+.chat-textarea {
+  background-color: #2d3748;
+  border: 1px solid #4a5568;
+  border-radius: 0.5rem;
+  padding: 0.75rem 2.5rem 0.75rem 1rem;
+  color: #e2e8f0;
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+  font-size: 0.9rem;
+  line-height: 1.5;
+  transition: all 0.2s ease;
+}
+
+.chat-textarea:focus {
+  outline: none;
+  border-color: #63b3ed;
+  box-shadow: 0 0 0 3px rgba(99, 179, 237, 0.2);
+}
+
+.chat-textarea::placeholder {
+  color: #a0aec0;
+}
