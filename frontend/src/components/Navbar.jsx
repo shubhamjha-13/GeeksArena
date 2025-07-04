@@ -1,19 +1,19 @@
 import { useEffect, useState } from "react";
-import { NavLink } from "react-router";
+import { NavLink } from "react-router";  // Fixed import
 import { useDispatch, useSelector } from "react-redux";
 import axiosClient from "../utils/axiosClient";
 import { logoutUser } from "../authSlice";
 
 export default function Navbar() {
   const { user } = useSelector((state) => state.auth);
+  const dispatch = useDispatch();  // Correctly placed useDispatch hook
+
   const handleLogout = () => {
-    dispatch(logoutUser());
-    setSolvedProblems([]); // Clear solved problems on logout
+    dispatch(logoutUser());  // Fixed dispatch call
   };
 
-  const handleProfileVisit = () => {};
   return (
-    <nav className="navbar bg-base-100 shadow-lg px-4 flex justify-between">
+    <nav className="navbar fixed top-0 z-50 bg-transparent backdrop-blur-lg shadow-lg px-4 flex justify-between">
       <div className="flex-1">
         <NavLink to="/" className="btn btn-ghost text-xl">
           LeetCode
@@ -26,8 +26,7 @@ export default function Navbar() {
           <li>
             <NavLink
               to="/problems"
-              className="btn btn-ghost text-base md:text-lg font-medium hover:bg-primary/10 hover:text-primary-focus transition-colors"
-              activeClassName="!text-primary-focus font-semibold"
+              className={({isActive}) => `btn btn-ghost text-base md:text-lg font-medium hover:bg-blue-100 hover:text-blue-600 transition-colors ${isActive ? '!text-blue-600 font-semibold' : ''}`}
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -49,8 +48,7 @@ export default function Navbar() {
           <li>
             <NavLink
               to="/resources"
-              className="btn btn-ghost text-base md:text-lg font-medium hover:bg-success/10 hover:text-success-focus transition-colors"
-              activeClassName="!text-success-focus font-semibold"
+              className={({isActive}) => `btn btn-ghost text-base md:text-lg font-medium hover:bg-green-100 hover:text-green-600 transition-colors ${isActive ? '!text-green-600 font-semibold' : ''}`}
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -72,8 +70,7 @@ export default function Navbar() {
           <li>
             <NavLink
               to="/discuss"
-              className="btn btn-ghost text-base md:text-lg font-medium hover:bg-warning/10 hover:text-warning-focus transition-colors"
-              activeClassName="!text-warning-focus font-semibold"
+              className={({isActive}) => `btn btn-ghost text-base md:text-lg font-medium hover:bg-yellow-100 hover:text-yellow-600 transition-colors ${isActive ? '!text-yellow-600 font-semibold' : ''}`}
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -95,8 +92,7 @@ export default function Navbar() {
           <li>
             <NavLink
               to="/sheets"
-              className="btn btn-ghost text-base md:text-lg font-medium hover:bg-warning/10 hover:text-warning-focus transition-colors"
-              activeClassName="!text-warning-focus font-semibold"
+              className={({isActive}) => `btn btn-ghost text-base md:text-lg font-medium hover:bg-purple-100 hover:text-purple-600 transition-colors ${isActive ? '!text-purple-600 font-semibold' : ''}`}
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -120,17 +116,18 @@ export default function Navbar() {
 
       <div className="flex-none gap-4">
         <div className="dropdown dropdown-end">
-          <div tabIndex={0} className="btn btn-ghost">
-            {user?.firstName}
+          <div tabIndex={0} className="flex items-center gap-2 cursor-pointer">
+            <div className="bg-gray-200 border-2 border-dashed rounded-xl w-10 h-10" />
+            <span className="font-medium hidden md:inline">{user?.firstName}</span>
           </div>
-          <ul className="mt-3 p-2 shadow menu menu-sm dropdown-content bg-base-100 rounded-box w-52">
+          <ul className="mt-3 p-2 shadow menu menu-sm dropdown-content bg-base-100 rounded-box w-52 z-50">
             <li>
               <NavLink to="/profile">Profile</NavLink>
             </li>
             <li>
               <button onClick={handleLogout}>Logout</button>
             </li>
-            {user.role == "admin" && (
+            {user?.role === "admin" && (
               <li>
                 <NavLink to="/admin">Admin</NavLink>
               </li>
