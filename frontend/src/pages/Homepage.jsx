@@ -140,23 +140,22 @@ function Homepage() {
                     </td>
 
                     <td>
-                    <div className="flex flex-wrap gap-1">
-  {Array.isArray(problem.tags)
-    ? problem.tags.map((tag, idx) => (
-        <span
-          key={idx}
-          className="bg-sky-100 text-sky-700 px-2 py-0.5 text-xs font-medium rounded-full"
-        >
-          {tag}
-        </span>
-      ))
-    : (
-        <span className="bg-sky-100 text-sky-700 px-2 py-0.5 text-xs font-medium rounded-full">
-          {problem.tags}
-        </span>
-      )}
-</div>
-
+                      <div className="flex flex-wrap gap-1">
+                        {Array.isArray(problem.tags) ? (
+                          problem.tags.map((tag, idx) => (
+                            <span
+                              key={idx}
+                              className="bg-sky-100 text-sky-700 px-2 py-0.5 text-xs font-medium rounded-full"
+                            >
+                              {tag}
+                            </span>
+                          ))
+                        ) : (
+                          <span className="bg-sky-100 text-sky-700 px-2 py-0.5 text-xs font-medium rounded-full">
+                            {problem.tags}
+                          </span>
+                        )}
+                      </div>
                     </td>
 
                     <td>
@@ -254,6 +253,5 @@ const getDifficultyBadgeStyle = (difficulty) => {
       return "bg-gray-100 text-gray-700";
   }
 };
-
 
 export default Homepage;

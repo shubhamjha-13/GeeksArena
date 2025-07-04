@@ -30,7 +30,7 @@ app.use("/submission", submitRouter);
 app.use("/ai", aiRouter);
 app.use("/video", videoRouter);
 app.use("/discuss", postRouter);
-app.use("/resource", resourceRouter);
+// app.use("/resource", resourceRouter);
 const InitalizeConnection = async () => {
   try {
     await Promise.all([main(), redisClient.connect()]);
