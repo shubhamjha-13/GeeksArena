@@ -192,22 +192,22 @@ const ProblemPage = () => {
             </h1>
           )}
         </div>
+        <div className="flex items-center gap-2 text-sm text-gray-400">
+          <Clock className="w-5 h-5" />
+          <span>{formatTime(timer)}</span>
+          <button
+            onClick={() => setIsTimerRunning(!isTimerRunning)}
+            className="ml-2 px-3 py-1 rounded-full bg-gradient-to-r from-yellow-500 to-orange-500 text-white font-semibold hover:from-yellow-600 hover:to-orange-600 transition duration-300 shadow-md hover:shadow-lg"
+          >
+            {isTimerRunning ? (
+              <FaRegPauseCircle size={18} />
+            ) : (
+              <AlarmClock size={18} />
+            )}
+            {/* <span className="ml-1">{isTimerRunning ? "Stop" : "Start"}</span> */}
+          </button>
+        </div>
         <div className="flex items-center gap-4">
-          <div className="flex items-center gap-2 text-sm text-gray-400">
-            <Clock className="w-5 h-5" />
-            <span>{formatTime(timer)}</span>
-            <button
-              onClick={() => setIsTimerRunning(!isTimerRunning)}
-              className="ml-2 px-3 py-1 rounded-full bg-gradient-to-r from-yellow-500 to-orange-500 text-white font-semibold hover:from-yellow-600 hover:to-orange-600 transition duration-300 shadow-md hover:shadow-lg"
-            >
-              {isTimerRunning ? (
-                <FaRegPauseCircle size={18} />
-              ) : (
-                <AlarmClock size={18} />
-              )}
-              {/* <span className="ml-1">{isTimerRunning ? "Stop" : "Start"}</span> */}
-            </button>
-          </div>
           <Maximize2 className="w-5 h-5 text-gray-400 cursor-pointer" />
           <button className="btn btn-sm btn-outline text-gray-400 border-gray-600 hover:bg-gray-700">
             Upgrade to Pro
@@ -361,7 +361,7 @@ const ProblemPage = () => {
                   <select
                     value={selectedLanguage}
                     onChange={handleLanguageChange}
-                    className="select select-bordered w-full max-w-xs text-gray-400 bg-gray-800 border-gray-700 hover:bg-gray-700"
+                    className="select select-bordered w-25 text-sm bg-gray-800 border-gray-700 hover:bg-gray-700 py-1 px-2 h-8"
                   >
                     <option value="javascript">JavaScript</option>
                     <option value="java">Java</option>
