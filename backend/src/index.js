@@ -11,6 +11,7 @@ const aiRouter = require("./routes/aiChatting");
 const videoRouter = require("./routes/videoCreator");
 const cors = require("cors");
 const postRouter = require("./routes/postRoutes");
+// const resourceRouter = require("./routes/resourceRouter");
 // console.log("Hello")
 
 app.use(
@@ -29,7 +30,7 @@ app.use("/submission", submitRouter);
 app.use("/ai", aiRouter);
 app.use("/video", videoRouter);
 app.use("/discuss", postRouter);
-
+// app.use("/resource", resourceRouter);
 const InitalizeConnection = async () => {
   try {
     await Promise.all([main(), redisClient.connect()]);
