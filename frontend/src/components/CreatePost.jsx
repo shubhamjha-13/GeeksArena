@@ -37,7 +37,7 @@ const CreatePost = ({ isOpen, onClose, onCreatePost }) => {
   };
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+    <div className="fixed inset-0 bg-transparent bg-opacity-50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
       <div className="bg-white rounded-t-[17px] rounded-b-[27px] shadow-[0_0_0_rgba(0,0,0,0.1),0_12px_26px_rgba(0,0,0,0.1),0_47px_47px_rgba(0,0,0,0.09),0_105px_63px_rgba(0,0,0,0.05),0_187px_75px_rgba(0,0,0,0.01)] w-full max-w-[450px] max-h-[90vh] overflow-y-auto">
         <div className="w-full h-[50px] relative flex items-center pl-5 border-b border-gray-100">
           <span className="font-bold text-[13px] text-[#47484b]">Create New Post</span>

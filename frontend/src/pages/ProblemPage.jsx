@@ -14,6 +14,7 @@ import {
   Maximize2,
   AlarmClock,
   Square,
+  X,
 } from "lucide-react";
 import Navbar from "../components/Navbar";
 
@@ -26,6 +27,8 @@ const ProblemPage = () => {
     cpp: "",
   });
   const [loading, setLoading] = useState("");
+  const [showConsole, setShowConsole] = useState(false);
+  const [consoleHeight, setConsoleHeight] = useState('30%');  // New state for console visibility
   const [runResult, setRunResult] = useState(null);
   const [submitResult, setSubmitResult] = useState(null);
   const [activeLeftTab, setActiveLeftTab] = useState("description");
@@ -107,24 +110,24 @@ const ProblemPage = () => {
   const handleRun = async () => {
     setLoading("run");
     setRunResult(null);
+    setShowConsole(true); // Show console immediately
     try {
       const response = await axiosClient.post(`/submission/run/${problemId}`, {
         code: codeByLanguage[selectedLanguage],
         language: selectedLanguage,
       });
       setRunResult(response.data);
-      setActiveRightTab("testcase");
     } catch (error) {
       setRunResult({ success: false, error: "Internal server error" });
-      setActiveRightTab("testcase");
     } finally {
       setLoading(false);
     }
   };
-
   const handleSubmitCode = async () => {
     setLoading("submit");
     setSubmitResult(null);
+    setShowConsole(false); // Hide console for submit
+    setActiveRightTab("result");
     try {
       const response = await axiosClient.post(
         `/submission/submit/${problemId}`,
@@ -134,10 +137,8 @@ const ProblemPage = () => {
         }
       );
       setSubmitResult(response.data);
-      setActiveRightTab("result");
     } catch (error) {
       setSubmitResult(null);
-      setActiveRightTab("result");
     } finally {
       setLoading(false);
     }
@@ -336,9 +337,9 @@ const ProblemPage = () => {
         </div>
 
         {/* Right Panel */}
-        <div className="w-1/2 flex flex-col bg-gray-900">
+        <div className="w-1/2 flex flex-col bg-gray-900 relative">
           <div className="flex border-b border-gray-800 bg-gray-900 px-6 py-3 gap-4">
-            {["code", "testcase", "result"].map((tab) => (
+            {["code", "result"].map((tab) => (
               <button
                 key={tab}
                 className={`pb-2 border-b-2 font-medium ${
@@ -346,7 +347,12 @@ const ProblemPage = () => {
                     ? "border-blue-500 text-blue-400"
                     : "border-transparent text-gray-400 hover:text-gray-200"
                 }`}
-                onClick={() => setActiveRightTab(tab)}
+                onClick={() => {
+                  setActiveRightTab(tab);
+                  if (tab === "result") {
+                    setShowConsole(false);
+                  }
+                }}
               >
                 {tab.charAt(0).toUpperCase() + tab.slice(1)}
               </button>
@@ -368,7 +374,7 @@ const ProblemPage = () => {
                   </select>
                 </div>
 
-                <div className="flex-1">
+                <div className="flex-1 relative">
                   <Editor
                     height="100%"
                     language={getLanguageForMonaco(selectedLanguage)}
@@ -383,72 +389,110 @@ const ProblemPage = () => {
                       scrollBeyondLastLine: false,
                     }}
                   />
+                  
+                  {/* Console Drawer */}
+                  {showConsole && (
+                    <div 
+                      className="absolute bottom-0 left-0 right-0 bg-gray-800 border-t border-gray-700 transition-all duration-300"
+                      style={{ height: consoleHeight }}
+                    >
+                      <div className="flex justify-between items-center p-3 border-b border-gray-700">
+                        <h3 className="font-semibold">Test Results</h3>
+                        <div className="flex items-center gap-2">
+                          <button 
+                            onClick={() => setConsoleHeight(consoleHeight === '30%' ? '50%' : '30%')}
+                            className="text-gray-400 hover:text-white"
+                          >
+                            {consoleHeight === '30%' ? '▲' : '▼'}
+                          </button>
+                          <button 
+                            onClick={() => setShowConsole(false)}
+                            className="text-gray-400 hover:text-white"
+                          >
+                            <X size={18} />
+                          </button>
+                        </div>
+                      </div>
+                      <div className="h-[calc(100%-45px)] overflow-y-auto p-4 text-sm">
+                        {runResult ? (
+                          <div className="space-y-3">
+                            {runResult.testCases.map((tc, i) => (
+                              <div key={i} className="mb-3 bg-gray-900 p-3 rounded border border-gray-700">
+                                <div className="flex gap-4">
+                                  <div className="flex-1">
+                                    <div className="text-gray-400 text-xs">Input</div>
+                                    <div className="mt-1">{tc.stdin}</div>
+                                  </div>
+                                  <div className="flex-1">
+                                    <div className="text-gray-400 text-xs">Expected</div>
+                                    <div className="mt-1">{tc.expected_output}</div>
+                                  </div>
+                                  <div className="flex-1">
+                                    <div className="text-gray-400 text-xs">Output</div>
+                                    <div className="mt-1">{tc.stdout}</div>
+                                  </div>
+                                </div>
+                                <div className={`mt-2 font-medium ${
+                                  tc.status_id === 3 ? 'text-green-500' : 'text-red-500'
+                                }`}>
+                                  {tc.status_id === 3 ? '✓ Passed' : '✗ Failed'}
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                        ) : (
+                          <div className="flex items-center justify-center h-full">
+                            {loading === "run" ? (
+                              <div className="flex items-center">
+                                <span className="loading loading-spinner loading-sm mr-2"></span>
+                                Running test cases...
+                              </div>
+                            ) : (
+                              <p className="text-gray-500">
+                                Click Run to execute test cases
+                              </p>
+                            )}
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  )}
                 </div>
 
-                <div className="p-3 border-t border-gray-800 flex justify-between">
-                  <button
-                    onClick={() => setActiveRightTab("testcase")}
-                    className="btn btn-sm btn-neutral text-gray-400"
-                  >
-                    Console
-                  </button>
+                <div className="p-3 border-t border-gray-800 flex justify-end">
                   <div className="flex gap-2">
                     <button
                       onClick={handleRun}
                       disabled={loading}
-                      className="btn btn-sm btn-outline text-gray-400 border-gray-600 hover:bg-gray-700"
+                      className={`btn btn-sm ${
+                        showConsole ? 'btn-primary' : 'btn-outline'
+                      } text-gray-400 border-gray-600 hover:bg-gray-700`}
                     >
-                      {loading === "run" ? "Running..." : "Run"}
+                      {loading === "run" ? (
+                        <span className="flex items-center">
+                          <span className="loading loading-spinner loading-xs mr-2"></span>
+                          Running...
+                        </span>
+                      ) : (
+                        "Run"
+                      )}
                     </button>
                     <button
                       onClick={handleSubmitCode}
                       disabled={loading}
                       className="btn btn-sm btn-primary text-white"
                     >
-                      {loading === "submit" ? "Submitting..." : "Submit"}
+                      {loading === "submit" ? (
+                        <span className="flex items-center">
+                          <span className="loading loading-spinner loading-xs mr-2"></span>
+                          Submitting...
+                        </span>
+                      ) : (
+                        "Submit"
+                      )}
                     </button>
                   </div>
                 </div>
-              </div>
-            )}
-
-            {activeRightTab === "testcase" && (
-              <div className="p-4 overflow-y-auto text-sm text-gray-300">
-                <h3 className="font-semibold mb-4">Test Results</h3>
-                {runResult ? (
-                  <div
-                    className={`p-4 rounded-md ${
-                      runResult.success ? "bg-green-900" : "bg-red-900"
-                    }`}
-                  >
-                    {runResult.testCases.map((tc, i) => (
-                      <div key={i} className="mb-3 bg-gray-800 p-3 rounded">
-                        <div>
-                          <strong>Input:</strong> {tc.stdin}
-                        </div>
-                        <div>
-                          <strong>Expected:</strong> {tc.expected_output}
-                        </div>
-                        <div>
-                          <strong>Output:</strong> {tc.stdout}
-                        </div>
-                        <div
-                          className={
-                            tc.status_id === 3
-                              ? "text-green-500"
-                              : "text-red-500"
-                          }
-                        >
-                          {tc.status_id === 3 ? "✓ Passed" : "✗ Failed"}
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                ) : (
-                  <p className="text-gray-500">
-                    Click Run to execute test cases.
-                  </p>
-                )}
               </div>
             )}
 

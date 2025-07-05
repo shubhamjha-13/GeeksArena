@@ -67,6 +67,8 @@ export default function Landing() {
                       backgroundImage: `linear-gradient(to right, ${colors.join(
                         ", "
                       )})`,
+                      borderRadius:"20px",
+                      display: "inline"
                     }}
                   >
                     Lab

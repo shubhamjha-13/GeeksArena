@@ -14,6 +14,8 @@ import AdminUpload from "./components/AdminUpload";
 import Landing from "./pages/Landing";
 import DiscussionPage from "./pages/DiscussionPage";
 import Profile from "./pages/Profile";
+import Resources from "./pages/Resources";
+import Sheets from "./pages/Sheets";
 import AdminUpdate from "./components/AdminUpdate";
 function App() {
   const dispatch = useDispatch();
@@ -51,6 +53,18 @@ function App() {
           path="/profile"
           element={
             isAuthenticated ? <Profile></Profile> : <Navigate to="/signup" />
+          }
+        ></Route>
+        <Route
+          path="/resources"
+          element={
+            isAuthenticated ? <Resources></Resources> : <Navigate to="/signup" />
+          }
+        ></Route>
+        <Route
+          path="/sheets"
+          element={
+            isAuthenticated ? <Sheets></Sheets> : <Navigate to="/signup" />
           }
         ></Route>
         <Route
