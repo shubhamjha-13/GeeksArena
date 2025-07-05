@@ -170,7 +170,6 @@ const ProblemPage = () => {
 
   return (
     <div className="h-screen flex flex-col bg-base-100 text-gray-300">
-      <Navbar></Navbar>
       {/* Top Header */}
       <div className="flex items-center justify-between bg-gray-900 border-b border-gray-800 px-6 py-3">
         <div className="flex items-center gap-4">
