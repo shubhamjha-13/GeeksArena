@@ -18,7 +18,7 @@ const DiscussionPage = () => {
       <Navbar />
 
       <main className="flex-grow py-8">
-        <div className="container mx-auto px-4">
+        <div className="container mx-auto mt-12 px-4">
           <div className="text-center mb-10">
             <h1 className="text-3xl md:text-4xl font-bold text-base-content mb-3">
               Community Discussions
