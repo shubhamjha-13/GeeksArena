@@ -16,6 +16,7 @@ import DiscussionPage from "./pages/DiscussionPage";
 import Profile from "./pages/Profile";
 import Resources from "./pages/Resources";
 import Sheets from "./pages/Sheets";
+import AdminUpdate from "./components/AdminUpdate";
 function App() {
   const dispatch = useDispatch();
   const { isAuthenticated, user, loading } = useSelector((state) => state.auth);
@@ -72,7 +73,7 @@ function App() {
         ></Route>
         <Route
           path="/discuss"
-          element={isAuthenticated ?  <DiscussionPage /> : <Signup></Signup>}
+          element={isAuthenticated ? <DiscussionPage /> : <Signup></Signup>}
         />
         <Route
           path="/signup"
@@ -123,6 +124,16 @@ function App() {
           element={
             isAuthenticated && user?.role === "admin" ? (
               <AdminUpload />
+            ) : (
+              <Navigate to="/" />
+            )
+          }
+        />
+        <Route
+          path="/admin/update"
+          element={
+            isAuthenticated && user?.role === "admin" ? (
+              <AdminUpdate />
             ) : (
               <Navigate to="/" />
             )

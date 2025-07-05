@@ -204,21 +204,28 @@ const getProblemById = async (req, res) => {
 
 const getAllProblem = async (req, res) => {
   try {
-    // Extract page and limit from query, set defaults
-    const page = parseInt(req.query.page) || 1;
-    const limit = parseInt(req.query.limit) || 10;
+    const page = req.query.page;
+    const limit = req.query.limit;
 
-    // Calculate number of documents to skip
-    const skip = (page - 1) * limit;
+    let getProblem;
+    let total;
 
-    // Fetch paginated data
-    const getProblem = await Problem.find({})
-      .select("_id title difficulty tags")
-      .skip(skip)
-      .limit(limit);
+    if (!page && !limit) {
+      // No pagination — return all problems
+      getProblem = await Problem.find({}).select("_id title difficulty tags");
+      total = getProblem.length;
+    } else {
+      const pageNum = parseInt(page) || 1;
+      const limitNum = parseInt(limit) || 10;
+      const skip = (pageNum - 1) * limitNum;
 
-    // Get total count for frontend pagination
-    const total = await Problem.countDocuments();
+      getProblem = await Problem.find({})
+        .select("_id title difficulty tags")
+        .skip(skip)
+        .limit(limitNum);
+
+      total = await Problem.countDocuments();
+    }
 
     if (getProblem.length === 0) {
       return res.status(404).send("No problems found");
@@ -226,9 +233,9 @@ const getAllProblem = async (req, res) => {
 
     res.status(200).json({
       total,
-      page,
-      limit,
-      totalPages: Math.ceil(total / limit),
+      page: page ? parseInt(page) : undefined,
+      limit: limit ? parseInt(limit) : undefined,
+      totalPages: limit ? Math.ceil(total / parseInt(limit)) : undefined,
       problems: getProblem,
     });
   } catch (err) {
