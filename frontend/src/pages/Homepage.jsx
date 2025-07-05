@@ -65,7 +65,7 @@ function Homepage() {
     <div className="min-h-screen bg-base-200">
       <Navbar />
 
-      <div className="flex flex-col md:flex-row p-6 gap-6">
+      <div className="flex flex-col md:flex-row p-6 pt-[5rem] gap-6">
         {/* Sidebar Filters */}
         <aside className="w-full md:w-64 bg-base-100 p-4 rounded-xl shadow-md h-fit sticky top-24">
           <h3 className="font-semibold text-lg mb-4">Filters</h3>
