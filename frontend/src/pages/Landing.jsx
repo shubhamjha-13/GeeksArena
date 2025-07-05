@@ -24,7 +24,7 @@ export default function Landing() {
 
         <section className="min-h-screen relative z-0 p-4">
           <div className="flex items-center">
-            <div className="container mx-auto px-4 py-20">
+            <div className="container mx-auto px-4 py-20 pl-20">
               <div className="max-w-3xl">
                 <h1 className="text-4xl md:text-6xl font-bold leading-tight mb-6">
                   A Lab where Coders Practice and Prove Themselves
@@ -43,7 +43,6 @@ export default function Landing() {
                 </div>
               </div>
             </div>
-
             <LetterGlitch
               glitchSpeed={50}
               centerVignette={true}
