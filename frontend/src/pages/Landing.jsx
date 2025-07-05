@@ -15,24 +15,68 @@ import {
   FaBookOpen,
   FaCheck,
 } from "react-icons/fa";
+import ScrambledText from "../components/ScrambleText";
+import SpotlightCard from "../components/SpotlightCard";
+import Aurora from "../components/Background1";
 
 export default function Landing() {
+  const colors = ["#ffaa40", "#9c40ff", "#ffaa40"];
+  const gradientStyles = {
+    backgroundImage: `linear-gradient(to right, ${colors.join(", ")})`,
+    WebkitBackgroundClip: "text",
+    WebkitTextFillColor: "transparent",
+    backgroundClip: "text",
+    color: "transparent",
+    display: "inline",
+    fontWeight: "bold",
+    fontSize: "4rem",
+    textTransform: "uppercase",
+  };
   return (
     <>
-      <div className="min-h-screen bg-gradient-to-br from-gray-900 to-gray-950 text-white">
-        <Navbar />
+      <div className="relative min-h-screen bg-gradient-to-br from-gray-900 to-gray-950 text-white">
+        {/* Aurora sits behind everything */}
+        <Aurora
+          className="absolute inset-0 z-0"
+          colorStops={["#3A29FF", "#FF94B4", "#FF3232"]}
+          blend={0.5}
+          amplitude={1.0}
+          speed={0.5}
+        />
 
-        <section className="min-h-screen relative z-0 p-4">
+        {/* Navbar floats above the Aurora */}
+        <div className="relative">
+          <Navbar />
+        </div>
+
+        {/* Main content also above */}
+        <section className="relative p-4">
           <div className="flex items-center">
-            <div className="container mx-auto px-4 py-20 pl-20">
+            <div className="container mx-auto px-8 py-20 flex">
               <div className="max-w-3xl">
-                <h1 className="text-4xl md:text-6xl font-bold leading-tight mb-6">
-                  A Lab where Coders Practice and Prove Themselves
-                </h1>
+                <ScrambledText
+                  className="scrambled-text-demo text-4xl md:text-6xl font-bold leading-tight"
+                  radius={100}
+                  duration={1.2}
+                  speed={0.5}
+                  scrambleChars=".:"
+                >
+                  A{" "}
+                  <span
+                    style={{
+                      backgroundImage: `linear-gradient(to right, ${colors.join(
+                        ", "
+                      )})`,
+                    }}
+                  >
+                    Lab
+                  </span>{" "}
+                  where Coders Practice and Prove Themselves
+                </ScrambledText>
 
                 <div className="w-24 h-1 bg-gradient-to-r from-blue-500 to-teal-400 mb-8"></div>
 
-                <p className="text-xl text-gray-300 mb-10 max-w-2xl">
+                <p className="text-xl  text-gray-300 mb-10 max-w-2xl ">
                   Train rigorously, solve real challenges, and sharpen your
                   coding mind. LetLabs is your lab to practice and push past
                   your limits — built for coders who want to lead.
@@ -43,6 +87,7 @@ export default function Landing() {
                 </div>
               </div>
             </div>
+
             <LetterGlitch
               glitchSpeed={50}
               centerVignette={true}
@@ -125,7 +170,28 @@ export default function Landing() {
               <div className="lg:w-1/2">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                   {/* Stats Card 1 */}
-                  <div className="bg-gradient-to-br from-blue-600/20 to-blue-800/20 rounded-xl p-8 border border-blue-500/30 relative overflow-hidden">
+
+                  <SpotlightCard
+                    className="
+    bg-gradient-to-br 
+    from-teal-600/20 
+    to-teal-800/20 
+    rounded-xl 
+    p-8 
+    border 
+    border-teal-500/30 
+    relative 
+    overflow-hidden 
+    transform        
+    transition-all   
+    duration-300     
+    ease-in-out      
+    hover:scale-105  
+    hover:shadow-lg  
+    custom-spotlight-card
+  "
+                    spotlightColor="rgba(0, 229, 255, 0.2)"
+                  >
                     <div className="absolute top-4 right-4 text-7xl opacity-10">
                       <FaCode />
                     </div>
@@ -133,16 +199,31 @@ export default function Landing() {
                     <div className="text-gray-300 text-lg">
                       Successfully Implemented Coding Problems
                     </div>
-                    <div className="mt-6 h-2 bg-gray-700 rounded-full overflow-hidden">
-                      <div
-                        className="h-full bg-gradient-to-r from-blue-400 to-teal-400"
-                        style={{ width: "85%" }}
-                      ></div>
-                    </div>
-                  </div>
+                  </SpotlightCard>
 
                   {/* Stats Card 2 */}
-                  <div className="bg-gradient-to-br from-teal-600/20 to-teal-800/20 rounded-xl p-8 border border-teal-500/30 relative overflow-hidden">
+
+                  <SpotlightCard
+                    className="
+    bg-gradient-to-br 
+    from-teal-600/20 
+    to-teal-800/20 
+    rounded-xl 
+    p-8 
+    border 
+    border-teal-500/30 
+    relative 
+    overflow-hidden 
+    transform        
+    transition-all   
+    duration-300     
+    ease-in-out      
+    hover:scale-105  
+    hover:shadow-lg  
+    custom-spotlight-card
+  "
+                    spotlightColor="rgba(0, 229, 255, 0.2)"
+                  >
                     <div className="absolute top-4 right-4 text-7xl opacity-10">
                       <FaChartLine />
                     </div>
@@ -152,13 +233,7 @@ export default function Landing() {
                     <div className="text-gray-300 text-lg">
                       Increase in Performance and Problem-Solving Success Rate
                     </div>
-                    <div className="mt-6 h-2 bg-gray-700 rounded-full overflow-hidden">
-                      <div
-                        className="h-full bg-gradient-to-r from-teal-400 to-green-400"
-                        style={{ width: "78%" }}
-                      ></div>
-                    </div>
-                  </div>
+                  </SpotlightCard>
 
                   {/* Feature Card 1 */}
                   <div className=" rounded-xl p-8 border border-gray-700">

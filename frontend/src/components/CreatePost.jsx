@@ -1,4 +1,6 @@
 import React from 'react';
+import axiosClient from '../utils/axiosClient'; // Add missing import
+import { useNavigate } from 'react-router'; // Add missing import
 
 const CreatePost = ({ isOpen, onClose, onCreatePost }) => {
   const [formData, setFormData] = React.useState({
@@ -6,6 +8,7 @@ const CreatePost = ({ isOpen, onClose, onCreatePost }) => {
     content: "",
     tags: ""
   });
+  const navigate = useNavigate(); // Initialize navigate
 
   if (!isOpen) return null;
 
@@ -14,17 +17,23 @@ const CreatePost = ({ isOpen, onClose, onCreatePost }) => {
     setFormData({ ...formData, [name]: value });
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
+  // Fixed handleSubmit function
+  const handleSubmit = async (e) => {
+    e.preventDefault(); // Prevent default form behavior
+    
+    try {
 
-    const processedData = {
-      ...formData,
-      tags: formData.tags
-        ? formData.tags.split(',').map(tag => tag.trim()).filter(tag => tag)
-        : []
-    };
-
-    onCreatePost(processedData);
+      // Make API request
+      await axiosClient.post('/discuss/create', formData);
+      
+      // Notify parent component and reset form
+      if (onCreatePost) onCreatePost();
+      onClose();
+      navigate('/discuss'); // Navigate to home
+    } catch (error) {
+      console.error('Error creating post:', error);
+      alert(`Error: ${error.response?.data?.message || error.message}`);
+    }
   };
 
   return (
@@ -55,7 +64,7 @@ const CreatePost = ({ isOpen, onClose, onCreatePost }) => {
         </div>
 
         <div className="p-5">
-          <form onSubmit={handleSubmit}>
+          <form onSubmit={handleSubmit}> {/* Use form onSubmit */}
             <div className="mb-4">
               <label className="block text-[#47484b] text-[13px] font-semibold mb-2" htmlFor="title">
                 Title
@@ -104,7 +113,7 @@ const CreatePost = ({ isOpen, onClose, onCreatePost }) => {
 
             <div className="flex justify-end">
               <button
-                type="submit"
+                type="submit" // Make this a submit button
                 className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 flex items-center"
               >
                 <span>Create Post</span>
