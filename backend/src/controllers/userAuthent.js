@@ -172,11 +172,61 @@ const deleteProfile = async (req, res) => {
 //   }
 // };
 
+// const getProfile = async (req, res) => {
+//   try {
+//     const user = await User.findById(req.result._id)
+//       .populate({
+//         path: "problemSolved", // Change 'problem' to 'problemSolved'
+//         select: "_id title difficulty tags",
+//       })
+//       .populate({
+//         path: "posts",
+//         select: "_id title content tags createdAt",
+//         options: { sort: { createdAt: -1 } },
+//       });
+
+//     // Calculate account creation date
+//     const joinDate = user.createdAt
+//       ? new Date(user.createdAt).toLocaleDateString("en-US", {
+//           year: "numeric",
+//           month: "long",
+//           day: "numeric",
+//         })
+//       : "Unknown";
+
+//     // console.log(JSON.stringify(user, null, 2)); // Pretty-print the entire user object
+//     // Build safe response object
+//     const userProfile = {
+//       _id: user._id,
+//       firstName: user.firstName || "",
+//       lastName: user.lastName || "",
+//       emailId: user.emailId || "",
+//       role: user.role || "user",
+//       problemSolvedCount: user.problemSolved?.length || 0,
+//       problemsSolved: user.problemSolved || [],
+//       postCount: user.posts?.length || 0, // Add count of posts
+//       posts: user.posts || [], // Include the posts array
+//       joinDate,
+//     };
+
+//     // Add optional fields only if they exist
+//     if (user.age !== undefined && user.age !== null) {
+//       userProfile.age = user.age;
+//     }
+
+//     res.status(200).json(userProfile);
+//   } catch (err) {
+//     res.status(500).json({
+//       message: err.message || "Internal server error",
+//     });
+//   }
+// };
+
 const getProfile = async (req, res) => {
   try {
     const user = await User.findById(req.result._id)
       .populate({
-        path: "problemSolved", // Change 'problem' to 'problemSolved'
+        path: "problemSolved",
         select: "_id title difficulty tags",
       })
       .populate({
@@ -185,7 +235,6 @@ const getProfile = async (req, res) => {
         options: { sort: { createdAt: -1 } },
       });
 
-    // Calculate account creation date
     const joinDate = user.createdAt
       ? new Date(user.createdAt).toLocaleDateString("en-US", {
           year: "numeric",
@@ -194,8 +243,6 @@ const getProfile = async (req, res) => {
         })
       : "Unknown";
 
-    // console.log(JSON.stringify(user, null, 2)); // Pretty-print the entire user object
-    // Build safe response object
     const userProfile = {
       _id: user._id,
       firstName: user.firstName || "",
@@ -204,12 +251,18 @@ const getProfile = async (req, res) => {
       role: user.role || "user",
       problemSolvedCount: user.problemSolved?.length || 0,
       problemsSolved: user.problemSolved || [],
-      postCount: user.posts?.length || 0, // Add count of posts
-      posts: user.posts || [], // Include the posts array
+      postCount: user.posts?.length || 0,
+      posts: user.posts || [],
       joinDate,
+
+      // New fields (always included)
+      profileImage: user.profileImage || "",
+      bio: user.bio || "",
+      github: user.github || "",
+      location: user.location || "",
     };
 
-    // Add optional fields only if they exist
+    // Optional: only include age if defined
     if (user.age !== undefined && user.age !== null) {
       userProfile.age = user.age;
     }
@@ -221,6 +274,42 @@ const getProfile = async (req, res) => {
     });
   }
 };
+
+const updateProfile = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const { firstName, lastName, age, profileImage, bio, github, location } =
+      req.body;
+
+    const updateData = {};
+    if (firstName !== undefined) updateData.firstName = firstName;
+    if (lastName !== undefined) updateData.lastName = lastName;
+    if (age !== undefined) updateData.age = age;
+    if (profileImage !== undefined) updateData.profileImage = profileImage;
+    if (bio !== undefined) updateData.bio = bio;
+    if (github !== undefined) updateData.github = github;
+    if (location !== undefined) updateData.location = location;
+
+    const updatedUser = await User.findByIdAndUpdate(id, updateData, {
+      new: true,
+      runValidators: true,
+    });
+
+    if (!updatedUser) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    res.status(200).json({
+      message: "Profile updated successfully",
+      user: updatedUser,
+    });
+  } catch (err) {
+    console.error("Update profile error:", err.message);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+
 module.exports = {
   register,
   login,
@@ -228,4 +317,5 @@ module.exports = {
   adminRegister,
   deleteProfile,
   getProfile,
+  updateProfile,
 };

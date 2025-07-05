@@ -15,6 +15,7 @@ import Landing from "./pages/Landing";
 import DiscussionPage from "./pages/DiscussionPage";
 import Profile from "./pages/Profile";
 import AdminUpdate from "./components/AdminUpdate";
+import ProfileUpdate from "./components/ProfileUpdate";
 function App() {
   const dispatch = useDispatch();
   const { isAuthenticated, user, loading } = useSelector((state) => state.auth);
@@ -116,7 +117,7 @@ function App() {
           }
         />
         <Route
-          path="/admin/update"
+          path="/user/update"
           element={
             isAuthenticated && user?.role === "admin" ? (
               <AdminUpdate />
@@ -124,6 +125,10 @@ function App() {
               <Navigate to="/" />
             )
           }
+        />
+        <Route
+          path="/user/update/:id"
+          element={isAuthenticated ? <ProfileUpdate /> : <Navigate to="/" />}
         />
         <Route path="/problem/:problemId" element={<ProblemPage />}></Route>
       </Routes>

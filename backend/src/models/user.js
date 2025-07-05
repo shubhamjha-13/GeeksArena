@@ -51,6 +51,27 @@ const userSchema = new Schema(
       type: String,
       required: true,
     },
+    profileImage: {
+      type: String, // Will store Cloudinary URL
+      default: "", // Optional
+    },
+
+    bio: {
+      type: String,
+      maxLength: 300, // Limit to a few sentences
+      default: "",
+    },
+
+    github: {
+      type: String,
+      default: "",
+    },
+
+    location: {
+      type: String,
+      maxLength: 100,
+      default: "",
+    },
   },
   {
     timestamps: true,

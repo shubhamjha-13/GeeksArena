@@ -8,6 +8,7 @@ const {
   adminRegister,
   deleteProfile,
   getProfile,
+  updateProfile,
 } = require("../controllers/userAuthent");
 const userMiddleware = require("../middleware/userMiddleware");
 const adminMiddleware = require("../middleware/adminMiddleware");
@@ -32,7 +33,7 @@ authRouter.get("/check", userMiddleware, (req, res) => {
   });
 });
 authRouter.get("/getProfile", userMiddleware, getProfile);
-
+authRouter.put("/update/:id", userMiddleware, updateProfile);
 module.exports = authRouter;
 
 // login
