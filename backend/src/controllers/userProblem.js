@@ -187,18 +187,52 @@ const getProblemById = async (req, res) => {
   }
 };
 
+// const getAllProblem = async (req, res) => {
+//   try {
+//     const getProblem = await Problem.find({}).select(
+//       "_id title difficulty tags"
+//     );
+
+//     if (getProblem.length == 0)
+//       return res.status(404).send("Problem is Missing");
+
+//     res.status(200).send(getProblem);
+//   } catch (err) {
+//     res.status(500).send("Error: " + err);
+//   }
+// };
+
 const getAllProblem = async (req, res) => {
   try {
-    const getProblem = await Problem.find({}).select(
-      "_id title difficulty tags"
-    );
+    // Extract page and limit from query, set defaults
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
 
-    if (getProblem.length == 0)
-      return res.status(404).send("Problem is Missing");
+    // Calculate number of documents to skip
+    const skip = (page - 1) * limit;
 
-    res.status(200).send(getProblem);
+    // Fetch paginated data
+    const getProblem = await Problem.find({})
+      .select("_id title difficulty tags")
+      .skip(skip)
+      .limit(limit);
+
+    // Get total count for frontend pagination
+    const total = await Problem.countDocuments();
+
+    if (getProblem.length === 0) {
+      return res.status(404).send("No problems found");
+    }
+
+    res.status(200).json({
+      total,
+      page,
+      limit,
+      totalPages: Math.ceil(total / limit),
+      problems: getProblem,
+    });
   } catch (err) {
-    res.status(500).send("Error: " + err);
+    res.status(500).send("Error: " + err.message);
   }
 };
 

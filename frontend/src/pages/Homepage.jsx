@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { NavLink } from "react-router"; // corrected
+import { NavLink } from "react-router"; // Make sure this is from react-router-dom if you're using v6+
 import { useDispatch, useSelector } from "react-redux";
 import axiosClient from "../utils/axiosClient";
 import { logoutUser } from "../authSlice";
@@ -11,6 +11,9 @@ function Homepage() {
   const { user } = useSelector((state) => state.auth);
   const [problems, setProblems] = useState([]);
   const [solvedProblems, setSolvedProblems] = useState([]);
+  const [page, setPage] = useState(1);
+  const [limit] = useState(5);
+  const [totalPages, setTotalPages] = useState(1);
   const [filters, setFilters] = useState({
     difficulty: "all",
     tag: "all",
@@ -20,8 +23,11 @@ function Homepage() {
   useEffect(() => {
     const fetchProblems = async () => {
       try {
-        const { data } = await axiosClient.get("/problem/getAllProblem");
-        setProblems(data);
+        const { data } = await axiosClient.get(
+          `/problem/getAllProblem?page=${page}&limit=${limit}`
+        );
+        setProblems(data.problems); // ✅ Correctly extract array
+        setTotalPages(data.totalPages);
       } catch (error) {
         console.error("Error fetching problems:", error);
       }
@@ -38,12 +44,16 @@ function Homepage() {
 
     fetchProblems();
     if (user) fetchSolvedProblems();
-  }, [user]);
+  }, [user, page]);
 
   const filteredProblems = problems.filter((problem) => {
     const difficultyMatch =
       filters.difficulty === "all" || problem.difficulty === filters.difficulty;
-    const tagMatch = filters.tag === "all" || problem.tags === filters.tag;
+    const tagMatch =
+      filters.tag === "all" ||
+      (Array.isArray(problem.tags)
+        ? problem.tags.includes(filters.tag)
+        : problem.tags === filters.tag);
     const statusMatch =
       filters.status === "all" ||
       (filters.status === "solved" &&
@@ -56,7 +66,7 @@ function Homepage() {
       <Navbar />
 
       <div className="flex flex-col md:flex-row p-6 gap-6">
-        {/* Left Sidebar - Filters */}
+        {/* Sidebar Filters */}
         <aside className="w-full md:w-64 bg-base-100 p-4 rounded-xl shadow-md h-fit sticky top-24">
           <h3 className="font-semibold text-lg mb-4">Filters</h3>
 
@@ -102,7 +112,7 @@ function Homepage() {
           </div>
         </aside>
 
-        {/* Main Content - Problems List */}
+        {/* Problems Table */}
         <main className="flex-1">
           <div className="overflow-x-auto bg-base-100 shadow-lg rounded-xl">
             <table className="table table-zebra">
@@ -132,8 +142,9 @@ function Homepage() {
 
                     <td>
                       <span
-                        className={`px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-wide
-    ${getDifficultyBadgeStyle(problem.difficulty)}`}
+                        className={`px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-wide ${getDifficultyBadgeStyle(
+                          problem.difficulty
+                        )}`}
                       >
                         {problem.difficulty}
                       </span>
@@ -219,7 +230,7 @@ function Homepage() {
                       </button>
                     </td>
 
-                    <td className="m-auto">
+                    <td>
                       <NavLink to={`/problem/${problem._id}`}>
                         <Button2 />
                       </NavLink>
@@ -234,6 +245,37 @@ function Homepage() {
                 No problems found with selected filters.
               </div>
             )}
+          </div>
+
+          {/* Pagination */}
+          <div className="flex justify-center my-6 gap-3">
+            <button
+              className="btn btn-sm"
+              onClick={() => setPage((prev) => Math.max(prev - 1, 1))}
+              disabled={page === 1}
+            >
+              Previous
+            </button>
+
+            {[...Array(totalPages)].map((_, i) => (
+              <button
+                key={i}
+                onClick={() => setPage(i + 1)}
+                className={`btn btn-sm ${
+                  page === i + 1 ? "btn-primary" : "btn-outline"
+                }`}
+              >
+                {i + 1}
+              </button>
+            ))}
+
+            <button
+              className="btn btn-sm"
+              onClick={() => setPage((prev) => Math.min(prev + 1, totalPages))}
+              disabled={page === totalPages}
+            >
+              Next
+            </button>
           </div>
         </main>
       </div>
