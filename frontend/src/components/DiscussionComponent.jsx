@@ -136,7 +136,7 @@ const DiscussionComponent = () => {
       <div className="mb-8">
         <div className="flex flex-col md:flex-row md:items-center justify-between mb-6">
           <div>
-            <h1 className="text-3xl font-bold text-gray-900">Developer Discussions</h1>
+            <h1 className="text-3xl font-bold text-white">Developer Discussions</h1>
             <p className="text-gray-600 mt-2">Share knowledge, ask questions, and connect with fellow developers</p>
           </div>
           <button 
