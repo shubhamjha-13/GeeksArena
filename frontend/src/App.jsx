@@ -59,7 +59,11 @@ function App() {
         <Route
           path="/resources"
           element={
-            isAuthenticated ? <Resources></Resources> : <Navigate to="/signup" />
+            isAuthenticated ? (
+              <Resources></Resources>
+            ) : (
+              <Navigate to="/signup" />
+            )
           }
         ></Route>
         <Route
@@ -131,7 +135,7 @@ function App() {
           }
         />
         <Route
-          path="/user/update"
+          path="/admin/update"
           element={
             isAuthenticated && user?.role === "admin" ? (
               <AdminUpdate />
