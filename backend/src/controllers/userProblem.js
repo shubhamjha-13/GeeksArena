@@ -11,9 +11,10 @@ const SolutionVideo = require("../models/solutionVideo");
 const createProblem = async (req, res) => {
   // API request to authenticate user:
   const {
-    // title,
-    // description,
-    // difficulty,
+    title,
+    description,
+    difficulty,
+    constraints,
     tags,
     visibleTestCases,
     hiddenTestCases,
@@ -76,6 +77,7 @@ const updateProblem = async (req, res) => {
     title,
     description,
     difficulty,
+    constraints,
     tags,
     visibleTestCases,
     hiddenTestCases,
@@ -161,7 +163,7 @@ const getProblemById = async (req, res) => {
     if (!id) return res.status(400).send("ID is Missing");
 
     const getProblem = await Problem.findById(id).select(
-      "_id title description difficulty tags visibleTestCases startCode referenceSolution "
+      "_id title description difficulty constraints tags visibleTestCases startCode referenceSolution "
     );
 
     // video ka jo bhi url wagera le aao

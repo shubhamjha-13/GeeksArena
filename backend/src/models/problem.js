@@ -15,6 +15,9 @@ const problemSchema = new Schema({
     enum: ["easy", "medium", "hard"],
     required: true,
   },
+  constraints: {
+    type: String,
+  },
   tags: {
     type: String,
     enum: ["array", "linked list", "two pointers", "graph", "dp"],
