@@ -88,6 +88,33 @@ const submitCode = async (req, res) => {
     // ProblemId ko insert karenge userSchema ke problemSolved mein if it is not persent there.
 
     // req.result == user Information
+    // ------------------ STREAK LOGIC ------------------
+    const today = new Date().toISOString().slice(0, 10); // "YYYY-MM-DD"
+    const user = await User.findById(userId); // ensure latest user data from DB
+
+    //streak logic
+    if (user.lastActiveDate !== today) {
+      const yesterday = new Date();
+      yesterday.setDate(yesterday.getDate() - 1);
+      const yday = yesterday.toISOString().slice(0, 10);
+
+      if (user.lastActiveDate === yday) {
+        // Continue streak
+        user.streakCount += 1;
+      } else {
+        // Reset streak
+        user.streakCount = 1;
+      }
+
+      user.lastActiveDate = today;
+
+      // Update longest streak
+      if (user.streakCount > user.longestStreak) {
+        user.longestStreak = user.streakCount;
+      }
+
+      await user.save();
+    }
 
     if (!req.result.problemSolved.includes(problemId)) {
       req.result.problemSolved.push(problemId);
@@ -101,6 +128,8 @@ const submitCode = async (req, res) => {
       passedTestCases: testCasesPassed,
       runtime,
       memory,
+      streak: user.streakCount,
+      longestStreak: user.longestStreak,
     });
   } catch (err) {
     res.status(500).send("Internal Server Error " + err);

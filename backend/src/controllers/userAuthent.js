@@ -256,14 +256,18 @@ const getProfile = async (req, res) => {
       posts: user.posts || [],
       joinDate,
 
-      // New fields (always included)
+      // Profile info
       profileImage: user.profileImage || "",
       bio: user.bio || "",
       github: user.github || "",
       location: user.location || "",
+
+      // New: Streak info
+      streakCount: user.streakCount || 0,
+      longestStreak: user.longestStreak || 0,
+      lastActiveDate: user.lastActiveDate || null,
     };
 
-    // Optional: only include age if defined
     if (user.age !== undefined && user.age !== null) {
       userProfile.age = user.age;
     }

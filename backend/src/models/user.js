@@ -72,6 +72,18 @@ const userSchema = new Schema(
       maxLength: 100,
       default: "",
     },
+    streakCount: {
+      type: Number,
+      default: 0,
+    },
+    lastActiveDate: {
+      type: String, // store as "YYYY-MM-DD"
+      default: null,
+    },
+    longestStreak: {
+      type: Number,
+      default: 0,
+    },
   },
   {
     timestamps: true,
