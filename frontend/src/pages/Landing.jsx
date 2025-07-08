@@ -89,7 +89,7 @@ export default function Landing() {
 
                 <p className="text-xl  text-gray-300 mb-10 max-w-2xl ">
                   Train rigorously, solve real challenges, and sharpen your
-                  coding mind. LetLabs is your lab to practice and push past
+                  coding mind. GeeksArena is your Arena to practice and push past
                   your limits — built for coders who want to lead.
                 </p>
 
@@ -287,7 +287,7 @@ export default function Landing() {
         <section className="py-20 relative z-0">
           <div className="container mx-auto px-4">
             <h2 className="text-3xl md:text-4xl font-bold text-center mb-16">
-              Why <span className="text-blue-400">LetLabs</span> is Different
+              Why <span className="text-blue-400">GeeksArena</span> is Different
             </h2>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
@@ -324,7 +324,7 @@ export default function Landing() {
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
               <Testimonial
-                quote="LetLabs helped me land my dream job at Google. The challenges were exactly what I needed to prepare."
+                quote="GeeksArena helped me land my dream job at Google. The challenges were exactly what I needed to prepare."
                 author="Sarah Johnson"
                 role="Software Engineer at Google"
               />
@@ -407,7 +407,7 @@ export default function Landing() {
 
             <div className="border-t border-gray-800 mt-12 pt-8 text-center text-gray-500">
               <p>
-                © 2023 LetLabs. All rights reserved. Designed for coders who
+                © 2025 GeeksArena. All rights reserved. Designed for coders who
                 want to lead.
               </p>
             </div>
