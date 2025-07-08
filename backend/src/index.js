@@ -14,9 +14,10 @@ const postRouter = require("./routes/postRoutes");
 // const resourceRouter = require("./routes/resourceRouter");
 // console.log("Hello")
 
-app.use(
-  cors({})
-);
+app.use(cors({
+  origin: 'https://proj12-one.vercel.app',
+  credentials: true, // allow cookies/auth headers
+}));
 
 app.use(express.json());
 app.use(cookieParser());
