@@ -39,9 +39,13 @@ export default function Profile() {
           emailId: data.emailId || "",
           role: data.role || "user",
           problemSolved: data.problemSolvedCount || 0,
-          problemsSolved: data.problemsSolved || [], // Corrected field name
+          problemsSolved: data.problemsSolved || [],
           joinDate: data.joinDate || "",
           posts: data.posts || [],
+          profileImage: data.profileImage || "", // Added
+          bio: data.bio || "", // Added
+          location: data.location || "", // Added
+          github: data.github || "", // Added
         });
 
         // Calculate problem statistics
@@ -96,10 +100,19 @@ export default function Profile() {
         {/* Profile Header */}
         <div className="bg-gradient-to-r from-blue-900 to-indigo-900 rounded-2xl shadow-xl p-6 mb-8">
           <div className="flex flex-col md:flex-row items-center md:items-start gap-6">
-            <div className="bg-gray-800 border-2 border-gray-700 rounded-xl w-24 h-24 md:w-32 md:h-32 flex items-center justify-center">
-              <span className="text-4xl text-white">
-                {user.firstName.charAt(0)}
-              </span>
+            {/* Profile Image */}
+            <div className="bg-gray-800 border-2 border-gray-700 rounded-xl w-24 h-24 md:w-32 md:h-32 flex items-center justify-center overflow-hidden">
+              {user.profileImage ? (
+                <img
+                  src={user.profileImage}
+                  alt={`${user.firstName} ${user.lastName}`}
+                  className="w-full h-full object-cover"
+                />
+              ) : (
+                <span className="text-4xl text-white">
+                  {user.firstName.charAt(0)}
+                </span>
+              )}
             </div>
 
             <div className="flex-1 text-center md:text-left">
@@ -109,12 +122,41 @@ export default function Profile() {
                     {user.firstName} {user.lastName}
                   </h1>
                   <p className="text-gray-300 mt-1">{user.emailId}</p>
+
+                  {/* Location */}
+                  {user.location && (
+                    <div className="flex items-center mt-1 text-gray-300">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        className="h-4 w-4 mr-1"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
+                        />
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
+                        />
+                      </svg>
+                      <span className="text-sm">{user.location}</span>
+                    </div>
+                  )}
                 </div>
+
                 <div className="mt-4 md:mt-0">
                   <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-blue-600 text-white">
                     {user.role.charAt(0).toUpperCase() + user.role.slice(1)}
                   </span>
                 </div>
+
                 <button
                   onClick={() => navigate(`/user/update/${user._id}`)}
                   className="mt-4 md:mt-0 inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 transition"
@@ -123,6 +165,37 @@ export default function Profile() {
                 </button>
               </div>
 
+              {/* Bio Section */}
+              {user.bio && (
+                <div className="mt-4 bg-gray-800/30 p-4 rounded-lg">
+                  <p className="text-gray-200 italic">"{user.bio}"</p>
+                </div>
+              )}
+
+              {/* GitHub Link */}
+              {user.github && (
+                <div className="mt-4">
+                  <a
+                    href={user.github}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center text-blue-300 hover:text-blue-100 transition"
+                  >
+                    <svg
+                      className="h-5 w-5 mr-2"
+                      fill="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        fillRule="evenodd"
+                        clipRule="evenodd"
+                        d="M12 2C6.477 2 2 6.477 2 12c0 4.42 2.87 8.17 6.84 9.5.5.08.66-.23.66-.5v-1.69c-2.77.6-3.36-1.34-3.36-1.34-.46-1.16-1.11-1.47-1.11-1.47-.91-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.87 1.52 2.34 1.07 2.91.83.09-.65.35-1.09.63-1.34-2.22-.25-4.55-1.11-4.55-4.92 0-1.11.38-2 1.03-2.71-.1-.25-.45-1.29.1-2.64 0 0 .84-.27 2.75 1.02.79-.22 1.65-.33 2.5-.33.85 0 1.71.11 2.5.33 1.91-1.29 2.75-1.02 2.75-1.02.55 1.35.2 2.39.1 2.64.65.71 1.03 1.6 1.03 2.71 0 3.82-2.34 4.66-4.57 4.91.36.31.69.92.69 1.85V21c0 .27.16.59.67.5C19.14 20.16 22 16.42 22 12A10 10 0 0012 2z"
+                      />
+                    </svg>
+                    GitHub Profile
+                  </a>
+                </div>
+              )}
               <div className="mt-6 grid grid-cols-2 md:grid-cols-4 gap-4">
                 <div className="text-center bg-gray-800/50 p-3 rounded-xl">
                   <p className="text-sm text-gray-300">Solved</p>
