@@ -98,7 +98,7 @@ export default function Profile() {
 
       <div className="max-w-7xl mx-auto px-4 py-8 sm:px-6 lg:px-8">
         {/* Profile Header */}
-        <div className="bg-gradient-to-r from-blue-900 to-indigo-900 rounded-2xl shadow-xl p-6 mb-8">
+        <div className="bg-gradient-to-r from-slate-800 to-slate-900 rounded-2xl shadow-xl p-6 mb-8">
           <div className="flex flex-col md:flex-row items-center md:items-start gap-6">
             {/* Profile Image */}
             <div className="bg-gray-800 border-2 border-gray-700 rounded-xl w-24 h-24 md:w-32 md:h-32 flex items-center justify-center overflow-hidden">
@@ -116,11 +116,18 @@ export default function Profile() {
             </div>
 
             <div className="flex-1 text-center md:text-left">
-              <div className="flex flex-col md:flex-row md:items-center justify-between">
+              <div className="flex flex-col md:flex-row md:items-start justify-between">
                 <div>
-                  <h1 className="text-2xl md:text-3xl font-bold text-white">
-                    {user.firstName} {user.lastName}
-                  </h1>
+                  {/* Name with Role Tag */}
+                  <div className="flex flex-col md:flex-row md:items-center gap-3 mb-1">
+                    <h1 className="text-2xl md:text-3xl font-bold text-white">
+                      {user.firstName} {user.lastName}
+                    </h1>
+                    <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-gradient-to-r from-cyan-500 to-blue-500 text-white shadow-lg">
+                      {user.role.charAt(0).toUpperCase() + user.role.slice(1)}
+                    </span>
+                  </div>
+
                   <p className="text-gray-300 mt-1">{user.emailId}</p>
 
                   {/* Location */}
@@ -152,17 +159,13 @@ export default function Profile() {
                 </div>
 
                 <div className="mt-4 md:mt-0">
-                  <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-blue-600 text-white">
-                    {user.role.charAt(0).toUpperCase() + user.role.slice(1)}
-                  </span>
+                  <button
+                    onClick={() => navigate(`/user/update/${user._id}`)}
+                    className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 transition"
+                  >
+                    Edit Profile
+                  </button>
                 </div>
-
-                <button
-                  onClick={() => navigate(`/user/update/${user._id}`)}
-                  className="mt-4 md:mt-0 inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 transition"
-                >
-                  Edit Profile
-                </button>
               </div>
 
               {/* Bio Section */}
