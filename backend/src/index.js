@@ -14,10 +14,12 @@ const postRouter = require("./routes/postRoutes");
 // const resourceRouter = require("./routes/resourceRouter");
 // console.log("Hello")
 
-app.use(cors({
-  origin: 'https://proj12-one.vercel.app',
-  credentials: true, // allow cookies/auth headers
-}));
+app.use(
+  cors({
+    origin: "https://proj12-one.vercel.app/",
+    credentials: true, // allow cookies/auth headers
+  })
+);
 
 app.use(express.json());
 app.use(cookieParser());
@@ -28,9 +30,9 @@ app.use("/submission", submitRouter);
 app.use("/ai", aiRouter);
 app.use("/video", videoRouter);
 app.use("/discuss", postRouter);
-app.get("/",(_req,res)=>{
-  return res.status(200).json({message:"everything fine"});
-})
+app.get("/", (_req, res) => {
+  return res.status(200).json({ message: "everything fine" });
+});
 // app.use("/resource", resourceRouter);
 const InitalizeConnection = async () => {
   try {
