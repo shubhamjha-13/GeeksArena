@@ -8,13 +8,7 @@ import SubmissionHistory from "../components/SubmissionHistory";
 import ChatAi from "../components/ChatAi";
 import Editorial from "../components/Editorial";
 import { FaRegPauseCircle } from "react-icons/fa";
-import {
-  Clock,
-  AlarmClock,
-  Square,
-  X,
-  User,
-} from "lucide-react";
+import { Clock, AlarmClock, Square, X, User } from "lucide-react";
 import Navbar from "../components/Navbar";
 
 const ProblemPage = () => {
@@ -127,14 +121,14 @@ const ProblemPage = () => {
 
   const handleMouseMove = (e) => {
     if (!isDragging) return;
-    
+
     // Get the main container element
-    const container = document.querySelector('.flex.flex-1.overflow-hidden');
+    const container = document.querySelector(".flex.flex-1.overflow-hidden");
     if (!container) return;
-    
+
     const rect = container.getBoundingClientRect();
     const newLeftWidth = ((e.clientX - rect.left) / rect.width) * 100;
-    
+
     // Set bounds between 20% and 80%
     if (newLeftWidth >= 20 && newLeftWidth <= 80) {
       setLeftPanelWidth(newLeftWidth);
@@ -153,69 +147,72 @@ const ProblemPage = () => {
 
   const handleVerticalMouseMove = (e) => {
     if (!isVerticalDragging) return;
-    
+
     // Get the code editor container
-    const codeContainer = document.querySelector('.code-editor-container');
+    const codeContainer = document.querySelector(".code-editor-container");
     if (!codeContainer) return;
-    
+
     const rect = codeContainer.getBoundingClientRect();
     // Calculate position relative to container, accounting for header/footer
     const headerOffset = 80; // Language selector
     const footerOffset = 80; // Buttons
     const contentHeight = rect.height - headerOffset - footerOffset;
-    
+
     const mousePosition = e.clientY - rect.top - headerOffset;
-    const newCodeHeight = Math.max(30, Math.min(85, (mousePosition / contentHeight) * 100));
-    
+    const newCodeHeight = Math.max(
+      30,
+      Math.min(85, (mousePosition / contentHeight) * 100)
+    );
+
     setCodeEditorHeight(newCodeHeight);
   };
 
   useEffect(() => {
     if (isDragging) {
-      document.addEventListener('mousemove', handleMouseMove);
-      document.addEventListener('mouseup', handleMouseUp);
-      document.body.style.cursor = 'col-resize';
-      document.body.style.userSelect = 'none';
+      document.addEventListener("mousemove", handleMouseMove);
+      document.addEventListener("mouseup", handleMouseUp);
+      document.body.style.cursor = "col-resize";
+      document.body.style.userSelect = "none";
     } else {
-      document.removeEventListener('mousemove', handleMouseMove);
-      document.removeEventListener('mouseup', handleMouseUp);
+      document.removeEventListener("mousemove", handleMouseMove);
+      document.removeEventListener("mouseup", handleMouseUp);
       if (!isVerticalDragging) {
-        document.body.style.cursor = '';
-        document.body.style.userSelect = '';
+        document.body.style.cursor = "";
+        document.body.style.userSelect = "";
       }
     }
 
     return () => {
-      document.removeEventListener('mousemove', handleMouseMove);
-      document.removeEventListener('mouseup', handleMouseUp);
+      document.removeEventListener("mousemove", handleMouseMove);
+      document.removeEventListener("mouseup", handleMouseUp);
       if (!isVerticalDragging) {
-        document.body.style.cursor = '';
-        document.body.style.userSelect = '';
+        document.body.style.cursor = "";
+        document.body.style.userSelect = "";
       }
     };
   }, [isDragging]);
 
   useEffect(() => {
     if (isVerticalDragging) {
-      document.addEventListener('mousemove', handleVerticalMouseMove);
-      document.addEventListener('mouseup', handleVerticalMouseUp);
-      document.body.style.cursor = 'row-resize';
-      document.body.style.userSelect = 'none';
+      document.addEventListener("mousemove", handleVerticalMouseMove);
+      document.addEventListener("mouseup", handleVerticalMouseUp);
+      document.body.style.cursor = "row-resize";
+      document.body.style.userSelect = "none";
     } else {
-      document.removeEventListener('mousemove', handleVerticalMouseMove);
-      document.removeEventListener('mouseup', handleVerticalMouseUp);
+      document.removeEventListener("mousemove", handleVerticalMouseMove);
+      document.removeEventListener("mouseup", handleVerticalMouseUp);
       if (!isDragging) {
-        document.body.style.cursor = '';
-        document.body.style.userSelect = '';
+        document.body.style.cursor = "";
+        document.body.style.userSelect = "";
       }
     }
 
     return () => {
-      document.removeEventListener('mousemove', handleVerticalMouseMove);
-      document.removeEventListener('mouseup', handleVerticalMouseUp);
+      document.removeEventListener("mousemove", handleVerticalMouseMove);
+      document.removeEventListener("mouseup", handleVerticalMouseUp);
       if (!isDragging) {
-        document.body.style.cursor = '';
-        document.body.style.userSelect = '';
+        document.body.style.cursor = "";
+        document.body.style.userSelect = "";
       }
     };
   }, [isVerticalDragging]);
@@ -267,7 +264,7 @@ const ProblemPage = () => {
         }
       );
       setSubmitResult(response.data);
-      
+
       // Trigger celebration if accepted
       if (response.data.accepted) {
         setShowCelebration(true);
@@ -313,14 +310,26 @@ const ProblemPage = () => {
     if (!showCelebration) return null;
 
     // Matrix characters and code snippets
-    const matrixChars = ['0', '1', 'ACCEPTED', 'SUCCESS', '01010101', 'SOLVED', '11001100', 'PASS', '10101010', 'TRUE', '00110011'];
-    const binaryChars = ['0', '1'];
+    const matrixChars = [
+      "0",
+      "1",
+      "ACCEPTED",
+      "SUCCESS",
+      "01010101",
+      "SOLVED",
+      "11001100",
+      "PASS",
+      "10101010",
+      "TRUE",
+      "00110011",
+    ];
+    const binaryChars = ["0", "1"];
 
     return (
       <div className="fixed inset-0 z-50 pointer-events-none flex items-center justify-center">
         {/* Dark matrix background */}
         <div className="absolute inset-0 bg-black/80 backdrop-blur-sm" />
-        
+
         {/* Scan lines effect */}
         <div className="absolute inset-0 opacity-20">
           {[...Array(50)].map((_, i) => (
@@ -352,14 +361,13 @@ const ProblemPage = () => {
                 className="animate-pulse"
                 style={{
                   animationDelay: `${rowIndex * 0.1}s`,
-                  animationDuration: '2s',
+                  animationDuration: "2s",
                   opacity: Math.random() > 0.5 ? 1 : 0.3,
                 }}
               >
-                {Math.random() > 0.8 
+                {Math.random() > 0.8
                   ? matrixChars[Math.floor(Math.random() * matrixChars.length)]
-                  : binaryChars[Math.floor(Math.random() * binaryChars.length)]
-                }
+                  : binaryChars[Math.floor(Math.random() * binaryChars.length)]}
               </div>
             ))}
           </div>
@@ -372,13 +380,22 @@ const ProblemPage = () => {
             className="absolute text-green-300 font-mono text-xs whitespace-nowrap"
             style={{
               left: `${Math.random() * 100}%`,
-              top: '-10%',
+              top: "-10%",
               animationDuration: `${2 + Math.random() * 3}s`,
               animationDelay: `${Math.random() * 2}s`,
             }}
             className="absolute text-green-300 font-mono text-xs whitespace-nowrap animate-bounce"
           >
-            {['01010101', '11001100', 'ACCEPTED', '00110011', 'SUCCESS', '10101010'][Math.floor(Math.random() * 6)]}
+            {
+              [
+                "01010101",
+                "11001100",
+                "ACCEPTED",
+                "00110011",
+                "SUCCESS",
+                "10101010",
+              ][Math.floor(Math.random() * 6)]
+            }
           </div>
         ))}
 
@@ -386,19 +403,21 @@ const ProblemPage = () => {
         <div className="relative z-10 text-center bg-black/60 border border-green-400 rounded-lg p-8 font-mono shadow-2xl shadow-green-500/25">
           <div className="mb-4 text-green-400 text-sm">
             <div className="flex items-center justify-center mb-2">
-              <span className="animate-pulse mr-2">{'>'}</span>
-              <span className="typing-animation">SYSTEM STATUS: CHECKING...</span>
+              <span className="animate-pulse mr-2">{">"}</span>
+              <span className="typing-animation">
+                SYSTEM STATUS: CHECKING...
+              </span>
             </div>
             <div className="flex items-center justify-center mb-2">
-              <span className="animate-pulse mr-2">{'>'}</span>
+              <span className="animate-pulse mr-2">{">"}</span>
               <span>ANALYZING SOLUTION...</span>
             </div>
             <div className="flex items-center justify-center">
-              <span className="animate-pulse mr-2">{'>'}</span>
+              <span className="animate-pulse mr-2">{">"}</span>
               <span>VERIFICATION COMPLETE</span>
             </div>
           </div>
-          
+
           <div className="border-t border-green-400 pt-4">
             <div className="text-4xl font-bold text-green-400 mb-2 animate-pulse">
               [[ ACCEPTED ]]
@@ -418,15 +437,22 @@ const ProblemPage = () => {
         </div>
 
         {/* Code fragments floating around */}
-        {['function()', 'return true;', 'if(solved)', 'console.log("PASS")', 'exit(0)', 'SUCCESS'].map((code, i) => (
+        {[
+          "function()",
+          "return true;",
+          "if(solved)",
+          'console.log("PASS")',
+          "exit(0)",
+          "SUCCESS",
+        ].map((code, i) => (
           <div
             key={i}
             className="absolute text-green-400 font-mono text-xs opacity-60 animate-bounce"
             style={{
-              left: `${10 + (i * 15)}%`,
+              left: `${10 + i * 15}%`,
               top: `${20 + Math.sin(i) * 20}%`,
               animationDelay: `${i * 0.3}s`,
-              animationDuration: '3s',
+              animationDuration: "3s",
             }}
           >
             {code}
@@ -439,14 +465,14 @@ const ProblemPage = () => {
         </div>
 
         {/* Digital grid pattern */}
-        <div 
+        <div
           className="absolute inset-0 opacity-5"
           style={{
             backgroundImage: `
               linear-gradient(rgba(0,255,0,0.1) 1px, transparent 1px),
               linear-gradient(90deg, rgba(0,255,0,0.1) 1px, transparent 1px)
             `,
-            backgroundSize: '20px 20px'
+            backgroundSize: "20px 20px",
           }}
         />
       </div>
@@ -459,7 +485,7 @@ const ProblemPage = () => {
       <div className="flex items-center justify-between bg-gradient-to-r from-gray-900/95 via-slate-900/95 to-gray-900/95 backdrop-blur-xl border-b border-gray-700/50 px-6 py-2 shadow-lg">
         <div className="flex items-center gap-4">
           <button
-            onClick={() => navigate("/")}
+            onClick={() => navigate("/problems")}
             className="px-5 py-2.5 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white rounded-xl font-medium transition-all duration-300 flex items-center gap-2 shadow-lg shadow-blue-600/25 hover:shadow-blue-600/40 hover:scale-105"
           >
             <svg
@@ -501,7 +527,7 @@ const ProblemPage = () => {
         </div>
         <div className="flex items-center gap-4">
           {/* Profile Photo - Similar to Navbar implementation */}
-          <div 
+          <div
             onClick={handleProfileClick}
             className="flex items-center gap-3 cursor-pointer hover:opacity-80 transition-all duration-300 bg-gray-800/50 px-3 py-2 rounded-xl border border-gray-700/50 hover:border-blue-500/50"
           >
@@ -515,11 +541,11 @@ const ProblemPage = () => {
                 />
               ) : (
                 <span className="text-white font-semibold text-sm">
-                  {currentUser?.firstName?.charAt(0)?.toUpperCase() || 'U'}
+                  {currentUser?.firstName?.charAt(0)?.toUpperCase() || "U"}
                 </span>
               )}
             </div>
-            
+
             {/* User Name - Only show on larger screens */}
             <span className="font-medium hidden lg:inline text-gray-200 text-sm">
               {currentUser?.firstName}
@@ -530,7 +556,7 @@ const ProblemPage = () => {
 
       <div className="flex flex-1 overflow-hidden">
         {/* Left Panel */}
-        <div 
+        <div
           className="flex flex-col bg-gradient-to-b from-slate-900/50 to-gray-900/50 backdrop-blur-sm border-r border-gray-700/50"
           style={{ width: `${leftPanelWidth}%` }}
         >
@@ -681,7 +707,7 @@ const ProblemPage = () => {
         </div>
 
         {/* Resizable Divider */}
-        <div 
+        <div
           className="w-1.5 bg-gradient-to-b from-gray-700 via-blue-500 to-gray-700 hover:bg-gradient-to-b hover:from-blue-400 hover:via-blue-500 hover:to-blue-400 cursor-col-resize flex-shrink-0 transition-all duration-300 relative group shadow-lg"
           onMouseDown={handleMouseDown}
         >
@@ -692,7 +718,7 @@ const ProblemPage = () => {
         </div>
 
         {/* Right Panel */}
-        <div 
+        <div
           className="flex flex-col bg-gradient-to-b from-slate-900/50 to-gray-900/50 backdrop-blur-sm relative"
           style={{ width: `${100 - leftPanelWidth}%` }}
           data-right-panel
@@ -733,10 +759,13 @@ const ProblemPage = () => {
 
                 {/* Code Editor Section */}
                 <div className="flex-1 bg-gray-900/50 relative">
-                  <div 
+                  <div
                     className="absolute inset-0"
-                    style={{ 
-                      height: (runResult || loading === "run") ? `${codeEditorHeight}%` : '100%'
+                    style={{
+                      height:
+                        runResult || loading === "run"
+                          ? `${codeEditorHeight}%`
+                          : "100%",
                     }}
                   >
                     <Editor
@@ -751,12 +780,13 @@ const ProblemPage = () => {
                         minimap: { enabled: false },
                         wordWrap: "on",
                         scrollBeyondLastLine: false,
-                        fontFamily: 'JetBrains Mono, Fira Code, Monaco, monospace',
+                        fontFamily:
+                          "JetBrains Mono, Fira Code, Monaco, monospace",
                         lineHeight: 1.6,
                         padding: { top: 16, bottom: 16 },
                         smoothScrolling: true,
-                        cursorBlinking: 'smooth',
-                        renderLineHighlight: 'gutter',
+                        cursorBlinking: "smooth",
+                        renderLineHighlight: "gutter",
                         selectOnLineNumbers: true,
                       }}
                     />
@@ -764,7 +794,7 @@ const ProblemPage = () => {
 
                   {/* Horizontal Resizable Divider */}
                   {(runResult || loading === "run") && (
-                    <div 
+                    <div
                       className="absolute left-0 right-0 h-1.5 bg-gradient-to-r from-gray-700 via-blue-500 to-gray-700 hover:bg-gradient-to-r hover:from-blue-400 hover:via-blue-500 hover:to-blue-400 cursor-row-resize transition-all duration-300 relative group shadow-lg z-10"
                       style={{ top: `${codeEditorHeight}%` }}
                       onMouseDown={handleVerticalMouseDown}
@@ -778,11 +808,11 @@ const ProblemPage = () => {
 
                   {/* Test Results Section */}
                   {(runResult || loading === "run") && (
-                    <div 
+                    <div
                       className="absolute left-0 right-0 bottom-0 bg-gradient-to-b from-gray-800/95 to-gray-900/95 backdrop-blur-lg border-t border-gray-600/50 shadow-2xl flex flex-col"
-                      style={{ 
+                      style={{
                         top: `${codeEditorHeight + 0.2}%`,
-                        height: `${100 - codeEditorHeight - 0.2}%`
+                        height: `${100 - codeEditorHeight - 0.2}%`,
                       }}
                     >
                       <div className="flex justify-between items-center p-4 border-b border-gray-600/50">
@@ -791,7 +821,7 @@ const ProblemPage = () => {
                           Test Results
                         </h3>
                         <div className="flex items-center gap-3">
-                          <button 
+                          <button
                             onClick={() => {
                               setRunResult(null);
                               setCodeEditorHeight(100);
@@ -806,28 +836,51 @@ const ProblemPage = () => {
                         {runResult ? (
                           <div className="space-y-4">
                             {runResult.testCases.map((tc, i) => (
-                              <div key={i} className="bg-gradient-to-r from-gray-900/70 to-gray-800/70 p-4 rounded-xl border border-gray-600/50 shadow-lg">
+                              <div
+                                key={i}
+                                className="bg-gradient-to-r from-gray-900/70 to-gray-800/70 p-4 rounded-xl border border-gray-600/50 shadow-lg"
+                              >
                                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                                   <div className="space-y-2">
-                                    <div className="text-gray-400 text-xs font-semibold uppercase tracking-wider">Input</div>
-                                    <div className="bg-gray-800/50 p-2 rounded-lg font-mono text-green-400 text-sm">{tc.stdin}</div>
+                                    <div className="text-gray-400 text-xs font-semibold uppercase tracking-wider">
+                                      Input
+                                    </div>
+                                    <div className="bg-gray-800/50 p-2 rounded-lg font-mono text-green-400 text-sm">
+                                      {tc.stdin}
+                                    </div>
                                   </div>
                                   <div className="space-y-2">
-                                    <div className="text-gray-400 text-xs font-semibold uppercase tracking-wider">Expected</div>
-                                    <div className="bg-gray-800/50 p-2 rounded-lg font-mono text-blue-400 text-sm">{tc.expected_output}</div>
+                                    <div className="text-gray-400 text-xs font-semibold uppercase tracking-wider">
+                                      Expected
+                                    </div>
+                                    <div className="bg-gray-800/50 p-2 rounded-lg font-mono text-blue-400 text-sm">
+                                      {tc.expected_output}
+                                    </div>
                                   </div>
                                   <div className="space-y-2">
-                                    <div className="text-gray-400 text-xs font-semibold uppercase tracking-wider">Output</div>
-                                    <div className="bg-gray-800/50 p-2 rounded-lg font-mono text-yellow-400 text-sm">{tc.stdout}</div>
+                                    <div className="text-gray-400 text-xs font-semibold uppercase tracking-wider">
+                                      Output
+                                    </div>
+                                    <div className="bg-gray-800/50 p-2 rounded-lg font-mono text-yellow-400 text-sm">
+                                      {tc.stdout}
+                                    </div>
                                   </div>
                                 </div>
-                                <div className={`mt-3 font-semibold flex items-center gap-2 ${
-                                  tc.status_id === 3 ? 'text-green-400' : 'text-red-400'
-                                }`}>
-                                  <div className={`w-2 h-2 rounded-full ${
-                                    tc.status_id === 3 ? 'bg-green-400' : 'bg-red-400'
-                                  }`}></div>
-                                  {tc.status_id === 3 ? '✓ Passed' : '✗ Failed'}
+                                <div
+                                  className={`mt-3 font-semibold flex items-center gap-2 ${
+                                    tc.status_id === 3
+                                      ? "text-green-400"
+                                      : "text-red-400"
+                                  }`}
+                                >
+                                  <div
+                                    className={`w-2 h-2 rounded-full ${
+                                      tc.status_id === 3
+                                        ? "bg-green-400"
+                                        : "bg-red-400"
+                                    }`}
+                                  ></div>
+                                  {tc.status_id === 3 ? "✓ Passed" : "✗ Failed"}
                                 </div>
                               </div>
                             ))}
@@ -837,7 +890,9 @@ const ProblemPage = () => {
                             {loading === "run" ? (
                               <div className="flex items-center gap-3 text-blue-400">
                                 <div className="animate-spin w-5 h-5 border-2 border-blue-400 border-t-transparent rounded-full"></div>
-                                <span className="font-medium">Running test cases...</span>
+                                <span className="font-medium">
+                                  Running test cases...
+                                </span>
                               </div>
                             ) : (
                               <p className="text-gray-500 text-center">
@@ -858,9 +913,9 @@ const ProblemPage = () => {
                       onClick={handleRun}
                       disabled={loading}
                       className={`btn btn-sm px-6 py-2 rounded-xl font-semibold transition-all duration-300 ${
-                        runResult 
-                          ? 'bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white shadow-lg shadow-green-600/25' 
-                          : 'bg-gradient-to-r from-gray-700 to-gray-800 hover:from-gray-600 hover:to-gray-700 text-gray-300 border border-gray-600/50'
+                        runResult
+                          ? "bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white shadow-lg shadow-green-600/25"
+                          : "bg-gradient-to-r from-gray-700 to-gray-800 hover:from-gray-600 hover:to-gray-700 text-gray-300 border border-gray-600/50"
                       } disabled:opacity-50 disabled:cursor-not-allowed hover:scale-105`}
                     >
                       {loading === "run" ? (
@@ -901,15 +956,19 @@ const ProblemPage = () => {
                   {submitResult ? (
                     <div
                       className={`p-6 rounded-xl border-2 ${
-                        submitResult.accepted 
-                          ? "bg-gradient-to-r from-green-900/30 to-emerald-900/30 border-green-500/50 shadow-green-500/20" 
+                        submitResult.accepted
+                          ? "bg-gradient-to-r from-green-900/30 to-emerald-900/30 border-green-500/50 shadow-green-500/20"
                           : "bg-gradient-to-r from-red-900/30 to-rose-900/30 border-red-500/50 shadow-red-500/20"
                       } shadow-xl`}
                     >
                       <div className="flex items-center gap-3 mb-4">
-                        <div className={`w-3 h-3 rounded-full ${
-                          submitResult.accepted ? 'bg-green-400' : 'bg-red-400'
-                        }`}></div>
+                        <div
+                          className={`w-3 h-3 rounded-full ${
+                            submitResult.accepted
+                              ? "bg-green-400"
+                              : "bg-red-400"
+                          }`}
+                        ></div>
                         <h4 className="font-bold text-2xl">
                           {submitResult.accepted
                             ? "🎉 Accepted"
@@ -918,24 +977,37 @@ const ProblemPage = () => {
                       </div>
                       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
                         <div className="bg-gray-800/50 p-3 rounded-lg">
-                          <div className="text-gray-400 text-xs font-semibold uppercase tracking-wider mb-1">Test Cases</div>
+                          <div className="text-gray-400 text-xs font-semibold uppercase tracking-wider mb-1">
+                            Test Cases
+                          </div>
                           <div className="text-lg font-bold">
-                            {submitResult.passedTestCases}/{submitResult.totalTestCases}
+                            {submitResult.passedTestCases}/
+                            {submitResult.totalTestCases}
                           </div>
                         </div>
                         <div className="bg-gray-800/50 p-3 rounded-lg">
-                          <div className="text-gray-400 text-xs font-semibold uppercase tracking-wider mb-1">Runtime</div>
-                          <div className="text-lg font-bold">{submitResult.runtime} sec</div>
+                          <div className="text-gray-400 text-xs font-semibold uppercase tracking-wider mb-1">
+                            Runtime
+                          </div>
+                          <div className="text-lg font-bold">
+                            {submitResult.runtime} sec
+                          </div>
                         </div>
                         <div className="bg-gray-800/50 p-3 rounded-lg">
-                          <div className="text-gray-400 text-xs font-semibold uppercase tracking-wider mb-1">Memory</div>
-                          <div className="text-lg font-bold">{submitResult.memory} KB</div>
+                          <div className="text-gray-400 text-xs font-semibold uppercase tracking-wider mb-1">
+                            Memory
+                          </div>
+                          <div className="text-lg font-bold">
+                            {submitResult.memory} KB
+                          </div>
                         </div>
                       </div>
                     </div>
                   ) : (
                     <div className="text-center py-12">
-                      <div className="text-gray-400 text-lg mb-2">Ready to submit?</div>
+                      <div className="text-gray-400 text-lg mb-2">
+                        Ready to submit?
+                      </div>
                       <p className="text-gray-500">
                         Click Submit to evaluate your solution.
                       </p>
