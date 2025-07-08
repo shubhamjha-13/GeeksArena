@@ -51,7 +51,7 @@ export default function Landing() {
 
         {/* Main content also above */}
         <section className="relative p-4">
-          <div className="flex items-center">
+          <div className="flex items-center px-10">
             <div className="container mx-auto px-8 py-20 flex">
               <div className="max-w-3xl">
                 <ScrambledText
@@ -61,19 +61,33 @@ export default function Landing() {
                   speed={0.5}
                   scrambleChars=".:"
                 >
-                  A{" "}
-                  <span
+                  Enter 
+                  {" "}
+                  <div className="flex items-center">
+                    <span className="mr-4">
+                    The
+                    </span>
+                    {" "}
+                    <span
                     style={{
                       backgroundImage: `linear-gradient(to right, ${colors.join(
                         ", "
                       )})`,
                       borderRadius:"20px",
-                      display: "inline"
+                      width:"20rem",
+                      display: "block",
+                      fontSize:"80px",
+                      fontFamily: "'Playfair Display', serif",
+                      fontStyle: "italic",
+                      letterSpacing: "2px",
+                      textAlign:"center"
                     }}
                   >
-                    Lab
-                  </span>{" "}
-                  where Coders Practice and Prove Themselves
+                    ARENA
+                  </span>
+                  </div>
+                  {" "}
+                Change the game!
                 </ScrambledText>
 
                 <div className="w-24 h-1 bg-gradient-to-r from-blue-500 to-teal-400 mb-8"></div>
