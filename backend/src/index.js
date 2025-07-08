@@ -16,7 +16,7 @@ const postRouter = require("./routes/postRoutes");
 
 app.use(
   cors({
-    origin: "http://localhost:5173",
+    origin: process.env.ORIGIN_PORT || "http://localhost:5173",
     credentials: true,
   })
 );

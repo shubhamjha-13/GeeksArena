@@ -231,8 +231,7 @@ const getProfile = async (req, res) => {
       })
       .populate({
         path: "posts",
-        select:
-          "_id title content tags createdAt comments -comments.user -comments.__v",
+        select: "_id title content tags createdAt comments ",
         options: { sort: { createdAt: -1 } },
       });
 
