@@ -14,16 +14,16 @@ const DiscussionPage = () => {
   }, []);
 
   return (
-    <div className="flex flex-col min-h-screen bg-base-100">
+    <div className="flex flex-col min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-gray-900">
       <Navbar />
 
       <main className="flex-grow py-8">
         <div className="container mx-auto mt-12 px-4">
           <div className="text-center mb-10">
-            <h1 className="text-3xl md:text-4xl font-bold text-base-content mb-3">
+            <h1 className="text-3xl md:text-4xl font-bold text-white mb-3">
               Community Discussions
             </h1>
-            <p className="text-base-content/70 max-w-2xl mx-auto">
+            <p className="text-gray-300 max-w-2xl mx-auto">
               Ask questions, share knowledge, and connect with other developers
             </p>
           </div>
