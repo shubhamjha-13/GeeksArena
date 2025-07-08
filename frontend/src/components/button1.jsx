@@ -14,7 +14,7 @@ const StyledWrapper = styled.div`
     position: relative;
     padding: 10px 20px;
     border-radius: 7px;
-    border: 1px solid rgb(82, 81, 81, 1);
+    border: 1px solid rgb(61, 106, 255);
     font-size: 14px;
     text-transform: uppercase;
     font-weight: 600;

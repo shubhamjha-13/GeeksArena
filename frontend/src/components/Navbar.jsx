@@ -3,7 +3,6 @@ import { NavLink } from "react-router";  // Fixed import
 import { useDispatch, useSelector } from "react-redux";
 import axiosClient from "../utils/axiosClient";
 import { logoutUser } from "../authSlice";
-import Button1 from "../components/button1";
 
 export default function Navbar() {
   const { user } = useSelector((state) => state.auth);
@@ -16,21 +15,18 @@ export default function Navbar() {
   return (
     <nav className="navbar fixed top-0 z-50 bg-transparent backdrop-blur-lg shadow-lg px-4 flex justify-between">
       <div className="flex-1">
-        <Button1>
-        <NavLink to="/" className="text-xl">
-          GeeksArena
+        <NavLink to="/" className="btn btn-ghost text-xl">
+          LeetCode
         </NavLink>
-        </Button1>
       </div>
 
       {/* Centered navigation section */}
-      <div className="flex justify-center flex-4">
+      <div className="flex justify-center flex-1">
         <ul className="menu menu-horizontal gap-1 md:gap-2 px-1">
           <li>
-            <Button1>
             <NavLink
               to="/problems"
-              className={"flex"}
+              className={({isActive}) => `btn btn-ghost text-base md:text-lg font-medium hover:bg-blue-100 hover:text-blue-600 transition-colors ${isActive ? '!text-blue-600 font-semibold' : ''}`}
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -48,15 +44,11 @@ export default function Navbar() {
               </svg>
               Problems
             </NavLink>
-           
-            </Button1>
-            
           </li>
           <li>
-            <Button1>
             <NavLink
               to="/resources"
-              className={({isActive}) => `flex `}
+              className={({isActive}) => `btn btn-ghost text-base md:text-lg font-medium hover:bg-green-100 hover:text-green-600 transition-colors ${isActive ? '!text-green-600 font-semibold' : ''}`}
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -74,15 +66,11 @@ export default function Navbar() {
               </svg>
               Resources
             </NavLink>
-
-            </Button1>
-           
           </li>
           <li>
-            <Button1>
             <NavLink
               to="/discuss"
-              className={"flex"}
+              className={({isActive}) => `btn btn-ghost text-base md:text-lg font-medium hover:bg-yellow-100 hover:text-yellow-600 transition-colors ${isActive ? '!text-yellow-600 font-semibold' : ''}`}
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -100,14 +88,11 @@ export default function Navbar() {
               </svg>
               Discussions
             </NavLink>
-            </Button1>
-            
           </li>
           <li>
-            <Button1>
             <NavLink
               to="/sheets"
-              className={"flex"}
+              className={({isActive}) => `btn btn-ghost text-base md:text-lg font-medium hover:bg-purple-100 hover:text-purple-600 transition-colors ${isActive ? '!text-purple-600 font-semibold' : ''}`}
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -125,8 +110,6 @@ export default function Navbar() {
               </svg>
               Sheets
             </NavLink>
-            </Button1>
-            
           </li>
         </ul>
       </div>
