@@ -15,10 +15,7 @@ const postRouter = require("./routes/postRoutes");
 // console.log("Hello")
 
 app.use(
-  cors({
-    origin: "*",
-    credentials: true,
-  })
+  cors({})
 );
 
 app.use(express.json());
