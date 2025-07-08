@@ -115,7 +115,7 @@ const DiscussionComponent = () => {
   
   if (error) return (
     <div className="max-w-4xl mx-auto p-4">
-      <div className="bg-red-50 border-l-4 border-red-500 p-4 mb-6">
+      <div className="bg-red-900/20 border-l-4 border-red-500 p-4 mb-6 rounded-r-lg backdrop-blur-sm">
         <div className="flex">
           <div className="flex-shrink-0">
             <svg className="h-5 w-5 text-red-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
@@ -123,7 +123,7 @@ const DiscussionComponent = () => {
             </svg>
           </div>
           <div className="ml-3">
-            <p className="text-sm text-red-700">{error}</p>
+            <p className="text-sm text-red-300">{error}</p>
           </div>
         </div>
       </div>
@@ -137,11 +137,11 @@ const DiscussionComponent = () => {
         <div className="flex flex-col md:flex-row md:items-center justify-between mb-6">
           <div>
             <h1 className="text-3xl font-bold text-white">Developer Discussions</h1>
-            <p className="text-gray-600 mt-2">Share knowledge, ask questions, and connect with fellow developers</p>
+            <p className="text-gray-400 mt-2">Share knowledge, ask questions, and connect with fellow developers</p>
           </div>
           <button 
             onClick={() => setIsCreateModalOpen(true)}
-            className="mt-4 md:mt-0 bg-gradient-to-r from-blue-600 to-indigo-700 text-white px-5 py-3 rounded-lg font-medium hover:from-blue-700 hover:to-indigo-800 transition-all shadow-md"
+            className="mt-4 md:mt-0 bg-gradient-to-r from-blue-500 to-indigo-600 text-white px-5 py-3 rounded-lg font-medium hover:from-blue-600 hover:to-indigo-700 transition-all shadow-lg"
           >
             Create New Post
           </button>
@@ -151,7 +151,7 @@ const DiscussionComponent = () => {
         <div className="flex flex-wrap gap-2 mb-6">
           <button 
             onClick={() => setActiveFilter("all")}
-            className={`px-4 py-2 rounded-full font-medium text-sm transition-colors ${activeFilter === "all" ? 'bg-blue-100 text-blue-700' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}`}
+            className={`px-4 py-2 rounded-full font-medium text-sm transition-colors ${activeFilter === "all" ? 'bg-blue-500 text-white shadow-md' : 'bg-slate-700/50 text-gray-300 hover:bg-slate-600/50'}`}
           >
             All Topics
           </button>
@@ -159,7 +159,7 @@ const DiscussionComponent = () => {
             <button 
               key={tag}
               onClick={() => setActiveFilter(tag)}
-              className={`px-4 py-2 rounded-full font-medium text-sm transition-colors ${activeFilter === tag ? 'bg-blue-100 text-blue-700' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}`}
+              className={`px-4 py-2 rounded-full font-medium text-sm transition-colors ${activeFilter === tag ? 'bg-blue-500 text-white shadow-md' : 'bg-slate-700/50 text-gray-300 hover:bg-slate-600/50'}`}
             >
               #{tag}
             </button>
@@ -168,42 +168,42 @@ const DiscussionComponent = () => {
       </div>
 
       {/* Stats Bar */}
-      <div className="bg-white rounded-xl shadow-sm p-4 mb-6 grid grid-cols-2 md:grid-cols-4 gap-4">
+      <div className="bg-slate-800/60 backdrop-blur-sm rounded-xl shadow-lg border border-slate-700/40 p-4 mb-6 grid grid-cols-2 md:grid-cols-4 gap-4">
         <div className="text-center">
-          <p className="text-2xl font-bold text-blue-600">{posts.length}</p>
-          <p className="text-gray-600 text-sm">Total Posts</p>
+          <p className="text-2xl font-bold text-blue-400">{posts.length}</p>
+          <p className="text-gray-400 text-sm">Total Posts</p>
         </div>
         <div className="text-center">
-          <p className="text-2xl font-bold text-green-600">
+          <p className="text-2xl font-bold text-green-400">
             {posts.reduce((total, post) => total + (post.comments?.length || 0), 0)}
           </p>
-          <p className="text-gray-600 text-sm">Total Comments</p>
+          <p className="text-gray-400 text-sm">Total Comments</p>
         </div>
         <div className="text-center">
-          <p className="text-2xl font-bold text-purple-600">{allTags.length}</p>
-          <p className="text-gray-600 text-sm">Topics</p>
+          <p className="text-2xl font-bold text-purple-400">{allTags.length}</p>
+          <p className="text-gray-400 text-sm">Topics</p>
         </div>
         <div className="text-center">
-          <p className="text-2xl font-bold text-orange-600">
+          <p className="text-2xl font-bold text-orange-400">
             {[...new Set(posts.map(post => post.user?._id))].filter(id => id).length}
           </p>
-          <p className="text-gray-600 text-sm">Active Users</p>
+          <p className="text-gray-400 text-sm">Active Users</p>
         </div>
       </div>
 
       {/* Posts List */}
       <div className="space-y-6">
         {filteredPosts.length === 0 ? (
-          <div className="bg-white rounded-xl shadow-sm p-8 text-center">
+          <div className="bg-slate-800/60 backdrop-blur-sm rounded-xl shadow-lg border border-slate-700/40 p-8 text-center">
             <svg className="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
             </svg>
-            <h3 className="mt-4 text-lg font-medium text-gray-900">No posts found</h3>
-            <p className="mt-2 text-gray-500">Be the first to create a post in this category!</p>
+            <h3 className="mt-4 text-lg font-medium text-white">No posts found</h3>
+            <p className="mt-2 text-gray-400">Be the first to create a post in this category!</p>
             <div className="mt-6">
               <button
                 onClick={() => setIsCreateModalOpen(true)}
-                className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none"
+                className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-500 hover:bg-blue-600 focus:outline-none transition-colors"
               >
                 Create Post
               </button>
@@ -213,20 +213,20 @@ const DiscussionComponent = () => {
           filteredPosts.map((post) => {
             const userInitials = getUserInitials(post.user);
             return (
-              <div key={post._id} className="bg-white rounded-xl shadow-sm overflow-hidden transition-all hover:shadow-md">
+              <div key={post._id} className="bg-slate-800/80 backdrop-blur-sm rounded-xl shadow-lg border border-slate-700/50 overflow-hidden transition-all hover:shadow-xl hover:border-slate-600/70">
                 {/* Post Header */}
-                <div className="p-6 border-b border-gray-100">
+                <div className="p-6 border-b border-slate-700/40">
                   <div className="flex items-start">
-                    <div className="bg-gradient-to-r from-blue-400 to-purple-500 rounded-xl w-12 h-12 flex items-center justify-center text-white font-bold text-lg">
+                    <div className="bg-gradient-to-r from-blue-500 to-indigo-600 rounded-xl w-12 h-12 flex items-center justify-center text-white font-bold text-lg shadow-md">
                       {userInitials}
                     </div>
                     <div className="ml-4 flex-1">
                       <div className="flex justify-between">
                         <div>
-                          <h3 className="font-bold text-gray-900">
+                          <h3 className="font-bold text-white">
                             {post.user?.firstName || 'Unknown'} {post.user?.lastName || ''}
                           </h3>
-                          <p className="text-gray-500 text-sm">
+                          <p className="text-gray-400 text-sm">
                             {new Date(post.createdAt).toLocaleString('en-US', {
                               month: 'short',
                               day: 'numeric',
@@ -238,7 +238,7 @@ const DiscussionComponent = () => {
                         </div>
                         <button 
                           onClick={() => togglePostExpansion(post._id)}
-                          className="text-gray-400 hover:text-gray-600"
+                          className="text-gray-400 hover:text-gray-300 transition-colors"
                         >
                           {expandedPosts[post._id] ? (
                             <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
@@ -252,7 +252,7 @@ const DiscussionComponent = () => {
                         </button>
                       </div>
                       
-                      <h2 className="text-xl font-bold text-gray-900 mt-3">{post.title}</h2>
+                      <h2 className="text-xl font-bold text-white mt-3">{post.title}</h2>
                       
                       {/* Tags */}
                       {post.tags && post.tags.length > 0 && (
@@ -260,7 +260,7 @@ const DiscussionComponent = () => {
                           {post.tags.map((tag, index) => (
                             <span
                               key={index}
-                              className="bg-blue-50 text-blue-700 px-3 py-1 rounded-full text-xs font-medium"
+                              className="bg-blue-500/20 text-blue-300 px-3 py-1 rounded-full text-xs font-medium cursor-pointer hover:bg-blue-500/30 transition-colors border border-blue-400/30"
                               onClick={() => setActiveFilter(tag)}
                             >
                               #{tag}
@@ -275,23 +275,23 @@ const DiscussionComponent = () => {
                 {/* Post Content - Collapsible */}
                 <div className={`overflow-hidden transition-all duration-300 ${expandedPosts[post._id] ? 'max-h-[1000px]' : 'max-h-0'}`}>
                   <div className="p-6 pt-4">
-                    <p className="text-gray-700 whitespace-pre-line">{post.content}</p>
+                    <p className="text-gray-200 whitespace-pre-line">{post.content}</p>
                     
                     {/* Engagement Metrics */}
-                    <div className="flex items-center mt-6 pt-4 border-t border-gray-100">
-                      <div className="flex items-center text-gray-500 mr-6">
+                    <div className="flex items-center mt-6 pt-4 border-t border-slate-700/40">
+                      <div className="flex items-center text-gray-400 mr-6">
                         <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
                         </svg>
                         <span>42 Likes</span>
                       </div>
-                      <div className="flex items-center text-gray-500 mr-6">
+                      <div className="flex items-center text-gray-400 mr-6">
                         <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
                         </svg>
                         <span>{post.comments?.length || 0} Comments</span>
                       </div>
-                      <div className="flex items-center text-gray-500">
+                      <div className="flex items-center text-gray-400">
                         <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" />
                         </svg>
@@ -301,8 +301,8 @@ const DiscussionComponent = () => {
                     
                     {/* Comments Section */}
                     <div className="mt-6">
-                      <h3 className="font-bold text-gray-900 mb-4 flex items-center">
-                        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <h3 className="font-bold text-white mb-4 flex items-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
                         </svg>
                         Comments ({post.comments?.length || 0})
@@ -315,7 +315,7 @@ const DiscussionComponent = () => {
                       >
                         <div className="flex gap-3">
                           <div className="flex-shrink-0">
-                            <div className="bg-gradient-to-r from-green-400 to-teal-500 rounded-xl w-10 h-10 flex items-center justify-center text-white font-bold">
+                            <div className="bg-gradient-to-r from-cyan-500 to-blue-500 rounded-xl w-10 h-10 flex items-center justify-center text-white font-bold shadow-md">
                               Y
                             </div>
                           </div>
@@ -326,12 +326,12 @@ const DiscussionComponent = () => {
                               onChange={(e) =>
                                 handleCommentChange(post._id, e.target.value)
                               }
-                              className="flex-1 px-4 py-3 border border-gray-300 rounded-l-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                              className="flex-1 px-4 py-3 bg-slate-700/50 border border-slate-600/50 rounded-l-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-white placeholder-gray-400"
                               placeholder="Add a comment..."
                             />
                             <button
                               type="submit"
-                              className="bg-gradient-to-r from-blue-600 to-indigo-700 text-white px-5 font-medium rounded-r-lg hover:from-blue-700 hover:to-indigo-800 transition-all"
+                              className="bg-gradient-to-r from-blue-500 to-indigo-600 text-white px-5 font-medium rounded-r-lg hover:from-blue-600 hover:to-indigo-700 transition-all shadow-md"
                             >
                               Post
                             </button>
@@ -343,31 +343,31 @@ const DiscussionComponent = () => {
                       <div className="space-y-4">
                         {post.comments?.map((comment, index) => (
                           <div key={index} className="flex items-start">
-                            <div className="bg-gradient-to-r from-orange-400 to-pink-500 rounded-xl w-10 h-10 flex items-center justify-center text-white font-bold flex-shrink-0">
+                            <div className="bg-gradient-to-r from-orange-500 to-red-500 rounded-xl w-10 h-10 flex items-center justify-center text-white font-bold flex-shrink-0 shadow-md">
                               {comment.name?.[0] || 'U'}
                             </div>
                             <div className="ml-3 flex-1">
-                              <div className="bg-gray-50 rounded-lg p-4">
+                              <div className="bg-slate-700/40 backdrop-blur-sm rounded-lg p-4 border border-slate-600/30">
                                 <div className="flex justify-between">
-                                  <span className="font-bold text-gray-900">{comment.name || "Anonymous"}</span>
-                                  <span className="text-gray-500 text-sm">
+                                  <span className="font-bold text-white">{comment.name || "Anonymous"}</span>
+                                  <span className="text-gray-400 text-sm">
                                     {new Date(comment.createdAt).toLocaleString('en-US', {
                                       hour: '2-digit',
                                       minute: '2-digit'
                                     })}
                                   </span>
                                 </div>
-                                <p className="mt-2 text-gray-700">{comment.text}</p>
+                                <p className="mt-2 text-gray-200">{comment.text}</p>
                                 
                                 {/* Comment Actions */}
                                 <div className="flex items-center mt-3">
-                                  <button className="text-gray-500 hover:text-blue-600 flex items-center text-sm mr-4">
+                                  <button className="text-gray-400 hover:text-blue-400 flex items-center text-sm mr-4 transition-colors">
                                     <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 10h4.764a2 2 0 011.789 2.894l-3.5 7A2 2 0 0115.263 21h-4.017c-.163 0-.326-.02-.485-.06L7 20m7-10V5a2 2 0 00-2-2h-.095c-.5 0-.905.405-.905.905 0 .714-.211 1.412-.608 2.006L7 11v9m7-10h-2M7 20H5a2 2 0 01-2-2v-6a2 2 0 012-2h2.5" />
                                     </svg>
                                     Like
                                   </button>
-                                  <button className="text-gray-500 hover:text-blue-600 flex items-center text-sm">
+                                  <button className="text-gray-400 hover:text-blue-400 flex items-center text-sm transition-colors">
                                     <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6" />
                                     </svg>
@@ -384,10 +384,10 @@ const DiscussionComponent = () => {
                 </div>
                 
                 {/* Post Footer - Always visible */}
-                <div className="px-6 py-3 bg-gray-50 border-t border-gray-100 flex justify-between">
+                <div className="px-6 py-3 bg-slate-800/40 border-t border-slate-700/40 flex justify-between">
                   <button 
                     onClick={() => togglePostExpansion(post._id)}
-                    className="text-blue-600 hover:text-blue-800 font-medium flex items-center"
+                    className="text-blue-400 hover:text-blue-300 font-medium flex items-center transition-colors"
                   >
                     {expandedPosts[post._id] ? 'Show less' : 'Read more'}
                     <svg xmlns="http://www.w3.org/2000/svg" className={`h-5 w-5 ml-1 transition-transform ${expandedPosts[post._id] ? 'rotate-180' : ''}`} viewBox="0 0 20 20" fill="currentColor">
@@ -395,19 +395,19 @@ const DiscussionComponent = () => {
                     </svg>
                   </button>
                   <div className="flex items-center space-x-4">
-                    <button className="text-gray-500 hover:text-blue-600 flex items-center">
+                    <button className="text-gray-400 hover:text-red-400 flex items-center transition-colors">
                       <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
                       </svg>
                       <span className="ml-1">Like</span>
                     </button>
-                    <button className="text-gray-500 hover:text-blue-600 flex items-center">
+                    <button className="text-gray-400 hover:text-blue-400 flex items-center transition-colors">
                       <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
                       </svg>
                       <span className="ml-1">Comment</span>
                     </button>
-                    <button className="text-gray-500 hover:text-blue-600 flex items-center">
+                    <button className="text-gray-400 hover:text-green-400 flex items-center transition-colors">
                       <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" />
                       </svg>
