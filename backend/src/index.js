@@ -16,7 +16,7 @@ const postRouter = require("./routes/postRoutes");
 
 app.use(
   cors({
-    origin: process.env.ORIGIN_PORT || "http://localhost:5173",
+    origin: "*",
     credentials: true,
   })
 );
@@ -30,6 +30,9 @@ app.use("/submission", submitRouter);
 app.use("/ai", aiRouter);
 app.use("/video", videoRouter);
 app.use("/discuss", postRouter);
+app.get("/",(_req,res)=>{
+  return res.status(200).json({message:"everything fine"});
+})
 // app.use("/resource", resourceRouter);
 const InitalizeConnection = async () => {
   try {
