@@ -41,7 +41,7 @@ function Signup() {
       {/* Added a light bg for contrast */}
       <div className="card w-96 bg-base-100 shadow-xl">
         <div className="card-body">
-          <h2 className="card-title justify-center text-3xl mb-6">Leetcode</h2>{" "}
+          <h2 className="card-title justify-center text-3xl mb-6">GeeksArena</h2>{" "}
           {/* Added mb-6 for spacing */}
           <form onSubmit={handleSubmit(onSubmit)}>
             {/* First Name Field */}
