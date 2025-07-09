@@ -348,9 +348,27 @@ export default function Landing() {
             <div className="flex flex-col md:flex-row justify-between items-center">
               <div className="mb-8 md:mb-0">
                 <div className="flex items-center space-x-2 mb-4">
-                  <FaLaptopCode className="text-blue-400 text-2xl" />
+                  {/* Logo - Same SVG as navbar */}
+                  <div className="w-8 h-8 relative">
+                    <svg viewBox="0 0 100 100" className="w-full h-full">
+                      {/* Light C shape */}
+                      <path
+                        d="M50 10 C25 10, 10 25, 10 50 C10 75, 25 90, 50 90 L50 75 C33 75, 25 67, 25 50 C25 33, 33 25, 50 25 L50 10 Z"
+                        fill="#F8FAFC"
+                      />
+                      {/* Cyan G shape */}
+                      <path
+                        d="M65 35 L85 35 L85 90 L70 90 L70 50 L60 50 L65 35 Z"
+                        fill="#06B6D4"
+                      />
+                      <path
+                        d="M45 35 L60 35 L50 50 L35 50 L45 35 Z"
+                        fill="#06B6D4"
+                      />
+                    </svg>
+                  </div>
                   <span className="text-xl font-bold">
-                    <span className="text-blue-400">Let</span>Labs
+                    <span className="text-blue-400">Geeks</span>Arena
                   </span>
                 </div>
                 <p className="text-gray-400 max-w-xs">
