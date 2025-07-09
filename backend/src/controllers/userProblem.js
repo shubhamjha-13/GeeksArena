@@ -264,14 +264,16 @@ const submittedProblem = async (req, res) => {
   try {
     const userId = req.result._id;
     const problemId = req.params.pid;
+    const submissions = await Submission.find({ userId, problemId }).sort({ createdAt: -1 });
 
-    const ans = await Submission.find({ userId, problemId });
-
-    if (ans.length == 0) res.status(200).send("No Submission is persent");
-
-    res.status(200).send(ans);
+    // Always return JSON array - either empty or with submissions
+    return res.status(200).json(submissions); // ✅ Single response with return
   } catch (err) {
-    res.status(500).send("Internal Server Error");
+    console.error("Error in submittedProblem:", err);
+    
+    if (res.headersSent) return; // Safety check
+    
+    return res.status(500).send("Internal Server Error");
   }
 };
 

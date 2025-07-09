@@ -26,45 +26,60 @@ const ProblemPage = () => {
   const [activeLeftTab, setActiveLeftTab] = useState("description");
   const [activeRightTab, setActiveRightTab] = useState("code");
   const [timer, setTimer] = useState(0);
-  const [isTimerRunning, setIsTimerRunning] = useState(false); // New state for timer on/off
+  const [isTimerRunning, setIsTimerRunning] = useState(false);
   const [userProfile, setUserProfile] = useState(null);
-  const [leftPanelWidth, setLeftPanelWidth] = useState(50); // Percentage width of left panel
+  const [leftPanelWidth, setLeftPanelWidth] = useState(50);
   const [isDragging, setIsDragging] = useState(false);
   const [showCelebration, setShowCelebration] = useState(false);
-  const [codeEditorHeight, setCodeEditorHeight] = useState(70); // Percentage height of code editor
+  const [codeEditorHeight, setCodeEditorHeight] = useState(70);
   const [isVerticalDragging, setIsVerticalDragging] = useState(false);
+  const [componentError, setComponentError] = useState(null);
   const editorRef = useRef(null);
   const navigate = useNavigate();
   let { problemId } = useParams();
   const { handleSubmit } = useForm();
 
+  // Error boundary function
+  const handleComponentError = (error, errorInfo) => {
+    console.error("Component error:", error, errorInfo);
+    setComponentError(error.message);
+  };
+
   useEffect(() => {
     const fetchProblem = async () => {
-      setLoading(true);
       try {
+        setLoading(true);
         const response = await axiosClient.get(
           `/problem/problemById/${problemId}`
         );
-        setProblem(response.data);
-        const initialCodes = {
-          javascript:
-            response.data.startCode.find((sc) => sc.language === "JavaScript")
-              ?.initialCode || "",
-          java:
-            response.data.startCode.find((sc) => sc.language === "Java")
-              ?.initialCode || "",
-          cpp:
-            response.data.startCode.find((sc) => sc.language === "C++")
-              ?.initialCode || "",
-        };
-        setCodeByLanguage(initialCodes);
+
+        if (response.data) {
+          setProblem(response.data);
+
+          // Safely handle startCode array
+          const startCode = response.data.startCode || [];
+          const initialCodes = {
+            javascript:
+              startCode.find((sc) => sc.language === "JavaScript")
+                ?.initialCode || "",
+            java:
+              startCode.find((sc) => sc.language === "Java")?.initialCode || "",
+            cpp:
+              startCode.find((sc) => sc.language === "C++")?.initialCode || "",
+          };
+          setCodeByLanguage(initialCodes);
+        }
         setLoading(false);
       } catch (error) {
         console.error("Error fetching problem:", error);
         setLoading(false);
+        setComponentError("Failed to load problem");
       }
     };
-    fetchProblem();
+
+    if (problemId) {
+      fetchProblem();
+    }
   }, [problemId]);
 
   // Fetch complete user profile data including profile image
@@ -122,20 +137,17 @@ const ProblemPage = () => {
   const handleMouseMove = (e) => {
     if (!isDragging) return;
 
-    // Get the main container element
     const container = document.querySelector(".flex.flex-1.overflow-hidden");
     if (!container) return;
 
     const rect = container.getBoundingClientRect();
     const newLeftWidth = ((e.clientX - rect.left) / rect.width) * 100;
 
-    // Set bounds between 20% and 80%
     if (newLeftWidth >= 20 && newLeftWidth <= 80) {
       setLeftPanelWidth(newLeftWidth);
     }
   };
 
-  // Vertical divider handlers for code editor and console
   const handleVerticalMouseDown = (e) => {
     setIsVerticalDragging(true);
     e.preventDefault();
@@ -148,14 +160,12 @@ const ProblemPage = () => {
   const handleVerticalMouseMove = (e) => {
     if (!isVerticalDragging) return;
 
-    // Get the code editor container
     const codeContainer = document.querySelector(".code-editor-container");
     if (!codeContainer) return;
 
     const rect = codeContainer.getBoundingClientRect();
-    // Calculate position relative to container, accounting for header/footer
-    const headerOffset = 80; // Language selector
-    const footerOffset = 80; // Buttons
+    const headerOffset = 80;
+    const footerOffset = 80;
     const contentHeight = rect.height - headerOffset - footerOffset;
 
     const mousePosition = e.clientY - rect.top - headerOffset;
@@ -218,7 +228,14 @@ const ProblemPage = () => {
   }, [isVerticalDragging]);
 
   const handleEditorChange = (value) => {
-    setCodeByLanguage((prev) => ({ ...prev, [selectedLanguage]: value || "" }));
+    try {
+      setCodeByLanguage((prev) => ({
+        ...prev,
+        [selectedLanguage]: value || "",
+      }));
+    } catch (error) {
+      console.error("Error updating code:", error);
+    }
   };
 
   const handleEditorDidMount = (editor) => {
@@ -226,7 +243,11 @@ const ProblemPage = () => {
   };
 
   const handleLanguageChange = (e) => {
-    setSelectedLanguage(e.target.value);
+    try {
+      setSelectedLanguage(e.target.value);
+    } catch (error) {
+      console.error("Error changing language:", error);
+    }
   };
 
   const handleRun = async () => {
@@ -238,11 +259,11 @@ const ProblemPage = () => {
         language: selectedLanguage,
       });
       setRunResult(response.data);
-      // Set a good initial split when results first appear
       if (codeEditorHeight === 100) {
-        setCodeEditorHeight(70); // 70% for code, 30% for results
+        setCodeEditorHeight(70);
       }
     } catch (error) {
+      console.error("Error running code:", error);
       setRunResult({ success: false, error: "Internal server error" });
       if (codeEditorHeight === 100) {
         setCodeEditorHeight(70);
@@ -251,6 +272,7 @@ const ProblemPage = () => {
       setLoading(false);
     }
   };
+
   const handleSubmitCode = async () => {
     setLoading("submit");
     setSubmitResult(null);
@@ -265,16 +287,15 @@ const ProblemPage = () => {
       );
       setSubmitResult(response.data);
 
-      // Trigger celebration if accepted
-      if (response.data.accepted) {
+      if (response.data && response.data.accepted) {
         setShowCelebration(true);
-        // Hide celebration after 4 seconds
         setTimeout(() => {
           setShowCelebration(false);
         }, 4000);
       }
     } catch (error) {
-      setSubmitResult(null);
+      console.error("Error submitting code:", error);
+      setSubmitResult({ success: false, error: "Submission failed" });
     } finally {
       setLoading(false);
     }
@@ -297,19 +318,61 @@ const ProblemPage = () => {
     }
   };
 
-  if (loading && !problem) {
+  const getTagColor = (index) => {
+    const colors = [
+      "bg-gradient-to-r from-blue-500/20 to-cyan-500/20 text-cyan-300 border-cyan-500/40 hover:border-cyan-400 hover:shadow-cyan-500/30",
+      "bg-gradient-to-r from-purple-500/20 to-pink-500/20 text-pink-300 border-pink-500/40 hover:border-pink-400 hover:shadow-pink-500/30",
+      "bg-gradient-to-r from-green-500/20 to-emerald-500/20 text-emerald-300 border-emerald-500/40 hover:border-emerald-400 hover:shadow-emerald-500/30",
+      "bg-gradient-to-r from-orange-500/20 to-amber-500/20 text-amber-300 border-amber-500/40 hover:border-amber-400 hover:shadow-amber-500/30",
+      "bg-gradient-to-r from-red-500/20 to-rose-500/20 text-rose-300 border-rose-500/40 hover:border-rose-400 hover:shadow-rose-500/30",
+      "bg-gradient-to-r from-indigo-500/20 to-violet-500/20 text-violet-300 border-violet-500/40 hover:border-violet-400 hover:shadow-violet-500/30",
+      "bg-gradient-to-r from-teal-500/20 to-cyan-500/20 text-teal-300 border-teal-500/40 hover:border-teal-400 hover:shadow-teal-500/30",
+      "bg-gradient-to-r from-lime-500/20 to-green-500/20 text-lime-300 border-lime-500/40 hover:border-lime-400 hover:shadow-lime-500/30",
+    ];
+    return colors[index % colors.length];
+  };
+
+  // Show error state if there's a component error
+  if (componentError) {
     return (
-      <div className="flex justify-center items-center min-h-screen bg-base-100">
-        <span className="loading loading-spinner loading-lg"></span>
+      <div className="h-screen flex flex-col bg-gradient-to-br from-slate-950 via-gray-900 to-slate-950 text-gray-100">
+        <div className="flex-1 flex items-center justify-center">
+          <div className="text-center p-8">
+            <div className="text-red-400 text-6xl mb-4">⚠️</div>
+            <h2 className="text-2xl font-bold text-red-400 mb-4">
+              Something went wrong
+            </h2>
+            <p className="text-gray-300 mb-6">{componentError}</p>
+            <button
+              onClick={() => {
+                setComponentError(null);
+                window.location.reload();
+              }}
+              className="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors duration-200"
+            >
+              Reload Page
+            </button>
+          </div>
+        </div>
       </div>
     );
   }
 
-  // Celebration Component - Matrix/Code Rain Style
+  if (loading && !problem) {
+    return (
+      <div className="flex justify-center items-center min-h-screen bg-gradient-to-br from-slate-950 via-gray-900 to-slate-950">
+        <div className="text-center">
+          <div className="animate-spin w-8 h-8 border-4 border-blue-400 border-t-transparent rounded-full mx-auto mb-4"></div>
+          <div className="text-gray-300">Loading problem...</div>
+        </div>
+      </div>
+    );
+  }
+
+  // Celebration Component
   const CelebrationOverlay = () => {
     if (!showCelebration) return null;
 
-    // Matrix characters and code snippets
     const matrixChars = [
       "0",
       "1",
@@ -327,25 +390,21 @@ const ProblemPage = () => {
 
     return (
       <div className="fixed inset-0 z-50 pointer-events-none flex items-center justify-center">
-        {/* Dark matrix background */}
         <div className="absolute inset-0 bg-black/80 backdrop-blur-sm" />
 
-        {/* Scan lines effect */}
         <div className="absolute inset-0 opacity-20">
           {[...Array(50)].map((_, i) => (
             <div
               key={i}
-              className="absolute w-full h-px bg-green-400"
+              className="absolute w-full h-px bg-green-400 animate-pulse opacity-30"
               style={{
                 top: `${i * 2}%`,
                 animationDelay: `${i * 0.1}s`,
               }}
-              className="absolute w-full h-px bg-green-400 animate-pulse opacity-30"
             />
           ))}
         </div>
 
-        {/* Matrix rain columns */}
         {[...Array(20)].map((_, colIndex) => (
           <div
             key={colIndex}
@@ -373,18 +432,16 @@ const ProblemPage = () => {
           </div>
         ))}
 
-        {/* Falling code streams */}
         {[...Array(15)].map((_, i) => (
           <div
             key={`stream-${i}`}
-            className="absolute text-green-300 font-mono text-xs whitespace-nowrap"
+            className="absolute text-green-300 font-mono text-xs whitespace-nowrap animate-bounce"
             style={{
               left: `${Math.random() * 100}%`,
               top: "-10%",
               animationDuration: `${2 + Math.random() * 3}s`,
               animationDelay: `${Math.random() * 2}s`,
             }}
-            className="absolute text-green-300 font-mono text-xs whitespace-nowrap animate-bounce"
           >
             {
               [
@@ -399,7 +456,6 @@ const ProblemPage = () => {
           </div>
         ))}
 
-        {/* Main terminal message */}
         <div className="relative z-10 text-center bg-black/60 border border-green-400 rounded-lg p-8 font-mono shadow-2xl shadow-green-500/25">
           <div className="mb-4 text-green-400 text-sm">
             <div className="flex items-center justify-center mb-2">
@@ -430,13 +486,11 @@ const ProblemPage = () => {
             </div>
           </div>
 
-          {/* Terminal cursor */}
           <div className="mt-4 flex justify-center">
             <span className="text-green-400 animate-pulse text-lg">█</span>
           </div>
         </div>
 
-        {/* Code fragments floating around */}
         {[
           "function()",
           "return true;",
@@ -459,12 +513,10 @@ const ProblemPage = () => {
           </div>
         ))}
 
-        {/* Glitch effect overlay */}
         <div className="absolute inset-0 opacity-10">
           <div className="w-full h-full bg-gradient-to-b from-transparent via-green-500/10 to-transparent animate-pulse" />
         </div>
 
-        {/* Digital grid pattern */}
         <div
           className="absolute inset-0 opacity-5"
           style={{
@@ -477,6 +529,17 @@ const ProblemPage = () => {
         />
       </div>
     );
+  };
+
+  // Safe tab click handler
+  const handleTabClick = (tab) => {
+    try {
+      setActiveLeftTab(tab);
+      setComponentError(null); // Clear any previous errors
+    } catch (error) {
+      console.error("Error switching tab:", error);
+      setComponentError("Failed to switch tab");
+    }
   };
 
   return (
@@ -526,12 +589,10 @@ const ProblemPage = () => {
           </button>
         </div>
         <div className="flex items-center gap-4">
-          {/* Profile Photo - Similar to Navbar implementation */}
           <div
             onClick={handleProfileClick}
             className="flex items-center gap-3 cursor-pointer hover:opacity-80 transition-all duration-300 bg-gray-800/50 px-3 py-2 rounded-xl border border-gray-700/50 hover:border-blue-500/50"
           >
-            {/* Profile Photo */}
             <div className="w-9 h-9 rounded-xl overflow-hidden border-2 border-gray-600/50 bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center shadow-lg">
               {currentUser?.profileImage ? (
                 <img
@@ -546,7 +607,6 @@ const ProblemPage = () => {
               )}
             </div>
 
-            {/* User Name - Only show on larger screens */}
             <span className="font-medium hidden lg:inline text-gray-200 text-sm">
               {currentUser?.firstName}
             </span>
@@ -575,7 +635,7 @@ const ProblemPage = () => {
                     ? "border-blue-500 text-blue-400 bg-blue-500/10 px-3 py-1 rounded-t-lg"
                     : "border-transparent text-gray-400 hover:text-gray-200 hover:border-gray-500 px-3 py-1 rounded-t-lg hover:bg-gray-800/30"
                 }`}
-                onClick={() => setActiveLeftTab(tab)}
+                onClick={() => handleTabClick(tab)}
               >
                 {tab.charAt(0).toUpperCase() + tab.slice(1)}
               </button>
@@ -588,31 +648,39 @@ const ProblemPage = () => {
                 {activeLeftTab === "description" && (
                   <div className="space-y-6">
                     <div className="bg-gradient-to-r from-gray-800/50 to-gray-700/50 backdrop-blur-sm p-6 rounded-2xl border border-gray-700/50 shadow-xl">
-                      <div className="flex items-center gap-4 mb-6 flex-wrap">
-                        <h1 className="text-3xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
-                          {problem.title}
-                        </h1>
-                        <span
-                          className={`px-4 py-2 border-2 rounded-full text-sm font-bold shadow-lg ${getDifficultyColor(
-                            problem.difficulty
-                          )}`}
-                        >
-                          {problem.difficulty.toUpperCase()}
-                        </span>
+                      <div className="mb-6">
+                        <div className="flex items-center gap-4 mb-4">
+                          <h1 className="text-3xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
+                            {problem.title || "Untitled Problem"}
+                          </h1>
+                          <span
+                            className={`px-4 py-2 border-2 rounded-full text-sm font-bold shadow-lg ${getDifficultyColor(
+                              problem.difficulty
+                            )}`}
+                          >
+                            {(problem.difficulty || "unknown").toUpperCase()}
+                          </span>
+                        </div>
+
                         <div className="flex gap-2 flex-wrap">
-                          {problem.tags.split(",").map((tag, idx) => (
-                            <span
-                              key={idx}
-                              className="px-3 py-1.5 bg-gradient-to-r from-blue-600/20 to-purple-600/20 text-blue-300 rounded-full text-xs font-semibold border border-blue-500/30 backdrop-blur-sm"
-                            >
-                              {tag.trim()}
-                            </span>
-                          ))}
+                          {(problem.tags || "")
+                            .split(",")
+                            .filter((tag) => tag.trim())
+                            .map((tag, idx) => (
+                              <span
+                                key={idx}
+                                className={`px-3 py-1.5 rounded-full text-sm font-semibold border shadow-md transition-all duration-200 hover:scale-105 ${getTagColor(
+                                  idx
+                                )}`}
+                              >
+                                {tag.trim()}
+                              </span>
+                            ))}
                         </div>
                       </div>
 
                       <div className="text-base leading-relaxed text-gray-300 whitespace-pre-wrap">
-                        {problem.description}
+                        {problem.description || "No description available"}
                       </div>
                     </div>
 
@@ -622,39 +690,42 @@ const ProblemPage = () => {
                         Examples
                       </h3>
                       <div className="space-y-4">
-                        {problem.visibleTestCases.map((example, index) => (
-                          <div
-                            key={index}
-                            className="bg-gradient-to-r from-gray-900/70 to-gray-800/70 p-5 rounded-xl border border-gray-600/50 shadow-lg hover:shadow-xl transition-all duration-300 hover:border-blue-500/30"
-                          >
-                            <div className="space-y-3">
-                              <div className="flex items-start gap-3">
-                                <span className="bg-green-600/20 text-green-300 px-2 py-1 rounded-md text-xs font-semibold border border-green-500/30">
-                                  Input:
-                                </span>
-                                <code className="bg-gray-800/50 px-3 py-1 rounded-md text-green-400 font-mono text-sm">
-                                  {example.input}
-                                </code>
-                              </div>
-                              <div className="flex items-start gap-3">
-                                <span className="bg-blue-600/20 text-blue-300 px-2 py-1 rounded-md text-xs font-semibold border border-blue-500/30">
-                                  Output:
-                                </span>
-                                <code className="bg-gray-800/50 px-3 py-1 rounded-md text-blue-400 font-mono text-sm">
-                                  {example.output}
-                                </code>
-                              </div>
-                              <div className="flex items-start gap-3">
-                                <span className="bg-purple-600/20 text-purple-300 px-2 py-1 rounded-md text-xs font-semibold border border-purple-500/30">
-                                  Explanation:
-                                </span>
-                                <span className="text-gray-300 text-sm">
-                                  {example.explanation}
-                                </span>
+                        {(problem.visibleTestCases || []).map(
+                          (example, index) => (
+                            <div
+                              key={index}
+                              className="bg-gradient-to-r from-gray-900/70 to-gray-800/70 p-5 rounded-xl border border-gray-600/50 shadow-lg hover:shadow-xl transition-all duration-300 hover:border-blue-500/30"
+                            >
+                              <div className="space-y-3">
+                                <div className="flex items-start gap-3">
+                                  <span className="bg-green-600/20 text-green-300 px-2 py-1 rounded-md text-xs font-semibold border border-green-500/30">
+                                    Input:
+                                  </span>
+                                  <code className="bg-gray-800/50 px-3 py-1 rounded-md text-green-400 font-mono text-sm">
+                                    {example.input || "N/A"}
+                                  </code>
+                                </div>
+                                <div className="flex items-start gap-3">
+                                  <span className="bg-blue-600/20 text-blue-300 px-2 py-1 rounded-md text-xs font-semibold border border-blue-500/30">
+                                    Output:
+                                  </span>
+                                  <code className="bg-gray-800/50 px-3 py-1 rounded-md text-blue-400 font-mono text-sm">
+                                    {example.output || "N/A"}
+                                  </code>
+                                </div>
+                                <div className="flex items-start gap-3">
+                                  <span className="bg-purple-600/20 text-purple-300 px-2 py-1 rounded-md text-xs font-semibold border border-purple-500/30">
+                                    Explanation:
+                                  </span>
+                                  <span className="text-gray-300 text-sm">
+                                    {example.explanation ||
+                                      "No explanation provided"}
+                                  </span>
+                                </div>
                               </div>
                             </div>
-                          </div>
-                        ))}
+                          )
+                        )}
                       </div>
                     </div>
                   </div>
@@ -674,10 +745,12 @@ const ProblemPage = () => {
                           className="bg-gradient-to-r from-gray-800/50 to-gray-700/50 backdrop-blur-sm rounded-2xl border border-gray-700/50 shadow-xl overflow-hidden"
                         >
                           <div className="bg-gradient-to-r from-blue-600 to-purple-600 px-6 py-3 font-semibold text-white">
-                            {solution.language}
+                            {solution.language || "Unknown Language"}
                           </div>
                           <pre className="p-6 text-sm overflow-x-auto bg-gray-900/50 text-gray-300 font-mono">
-                            <code>{solution.completeCode}</code>
+                            <code>
+                              {solution.completeCode || "No code available"}
+                            </code>
                           </pre>
                         </div>
                       ))
@@ -691,14 +764,23 @@ const ProblemPage = () => {
                   </div>
                 )}
                 {activeLeftTab === "submissions" && (
-                  <SubmissionHistory problemId={problemId} />
+                  <div className="space-y-4">
+                    <h2 className="text-2xl font-bold mb-6 text-gray-100 flex items-center gap-2">
+                      <div className="w-2 h-2 bg-gradient-to-r from-blue-400 to-cyan-400 rounded-full"></div>
+                      Submissions
+                    </h2>
+                    <SubmissionHistory
+                      problemId={problemId}
+                      submitResult={submitResult}
+                    />
+                  </div>
                 )}
                 {activeLeftTab === "chatAI" &&
                   (problem ? (
                     <ChatAi problem={problem} />
                   ) : (
                     <div className="flex justify-center items-center h-full">
-                      <span className="loading loading-spinner loading-lg"></span>
+                      <div className="animate-spin w-6 h-6 border-2 border-blue-400 border-t-transparent rounded-full"></div>
                     </div>
                   ))}
               </>
@@ -835,7 +917,7 @@ const ProblemPage = () => {
                       <div className="flex-1 overflow-y-auto p-4 text-sm">
                         {runResult ? (
                           <div className="space-y-4">
-                            {runResult.testCases.map((tc, i) => (
+                            {(runResult.testCases || []).map((tc, i) => (
                               <div
                                 key={i}
                                 className="bg-gradient-to-r from-gray-900/70 to-gray-800/70 p-4 rounded-xl border border-gray-600/50 shadow-lg"
@@ -846,7 +928,7 @@ const ProblemPage = () => {
                                       Input
                                     </div>
                                     <div className="bg-gray-800/50 p-2 rounded-lg font-mono text-green-400 text-sm">
-                                      {tc.stdin}
+                                      {tc.stdin || "N/A"}
                                     </div>
                                   </div>
                                   <div className="space-y-2">
@@ -854,7 +936,7 @@ const ProblemPage = () => {
                                       Expected
                                     </div>
                                     <div className="bg-gray-800/50 p-2 rounded-lg font-mono text-blue-400 text-sm">
-                                      {tc.expected_output}
+                                      {tc.expected_output || "N/A"}
                                     </div>
                                   </div>
                                   <div className="space-y-2">
@@ -862,7 +944,7 @@ const ProblemPage = () => {
                                       Output
                                     </div>
                                     <div className="bg-gray-800/50 p-2 rounded-lg font-mono text-yellow-400 text-sm">
-                                      {tc.stdout}
+                                      {tc.stdout || "N/A"}
                                     </div>
                                   </div>
                                 </div>
@@ -906,7 +988,7 @@ const ProblemPage = () => {
                   )}
                 </div>
 
-                {/* Action Buttons - Always at bottom */}
+                {/* Action Buttons */}
                 <div className="p-4 border-t border-gray-700/50 bg-gray-800/30 flex justify-end">
                   <div className="flex gap-3">
                     <button
@@ -972,7 +1054,7 @@ const ProblemPage = () => {
                         <h4 className="font-bold text-2xl">
                           {submitResult.accepted
                             ? "🎉 Accepted"
-                            : "❌ " + submitResult.error}
+                            : "❌ " + (submitResult.error || "Failed")}
                         </h4>
                       </div>
                       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
@@ -981,8 +1063,8 @@ const ProblemPage = () => {
                             Test Cases
                           </div>
                           <div className="text-lg font-bold">
-                            {submitResult.passedTestCases}/
-                            {submitResult.totalTestCases}
+                            {submitResult.passedTestCases || 0}/
+                            {submitResult.totalTestCases || 0}
                           </div>
                         </div>
                         <div className="bg-gray-800/50 p-3 rounded-lg">
@@ -990,7 +1072,8 @@ const ProblemPage = () => {
                             Runtime
                           </div>
                           <div className="text-lg font-bold">
-                            {submitResult.runtime} sec
+                            {submitResult.runtime || "N/A"}{" "}
+                            {submitResult.runtime ? "sec" : ""}
                           </div>
                         </div>
                         <div className="bg-gray-800/50 p-3 rounded-lg">
@@ -998,7 +1081,8 @@ const ProblemPage = () => {
                             Memory
                           </div>
                           <div className="text-lg font-bold">
-                            {submitResult.memory} KB
+                            {submitResult.memory || "N/A"}{" "}
+                            {submitResult.memory ? "KB" : ""}
                           </div>
                         </div>
                       </div>
