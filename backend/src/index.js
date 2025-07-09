@@ -16,7 +16,7 @@ const postRouter = require("./routes/postRoutes");
 
 app.use(
   cors({
-    origin: "https://proj12-one.vercel.app",
+    origin: "https://geeksarena-one.vercel.app/",
     credentials: true, // allow cookies/auth headers
   })
 );
