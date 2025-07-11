@@ -18,7 +18,7 @@ import {
 import ScrambledText from "../components/ScrambleText";
 import SpotlightCard from "../components/SpotlightCard";
 import Aurora from "../components/Background1";
-
+import { Link } from "react-router";
 export default function Landing() {
   const colors = ["#ffaa40", "#9c40ff", "#ffaa40"];
   const gradientStyles = {
@@ -89,12 +89,14 @@ export default function Landing() {
 
                 <p className="text-xl  text-gray-300 mb-10 max-w-2xl ">
                   Train rigorously, solve real challenges, and sharpen your
-                  coding mind. GeeksArena is your Arena to practice and push past
-                  your limits — built for coders who want to lead.
+                  coding mind. GeeksArena is your Arena to practice and push
+                  past your limits — built for coders who want to lead.
                 </p>
 
                 <div className="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-6 ">
-                  <Button1>Join Now</Button1>
+                  <Link to="/signup">
+                    <Button1>Join Now</Button1>
+                  </Link>
                 </div>
               </div>
             </div>

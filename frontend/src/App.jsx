@@ -38,12 +38,7 @@ function App() {
   return (
     <>
       <Routes>
-        <Route
-          path="/"
-          element={
-            isAuthenticated ? <Landing></Landing> : <Navigate to="/signup" />
-          }
-        ></Route>
+        <Route path="/" element={<Landing></Landing>}></Route>
         <Route
           path="/problems"
           element={
