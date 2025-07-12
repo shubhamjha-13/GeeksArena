@@ -130,12 +130,12 @@ GeeksArena is a modern web platform designed to offer a comprehensive coding pra
 
    # Frontend (in a new terminal)
    cd frontend
-   npm start
+   npm run dev
    ```
 
 5. **Visit the App**
-   - Frontend: http://localhost:3000  
-   - Backend: http://localhost:5000
+   - Frontend: http://localhost:5174  
+   - Backend: http://localhost:3000
 
 ## Usage
 
