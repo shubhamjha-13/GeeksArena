@@ -262,9 +262,6 @@ git push origin feature/your-feature-name
 
 Submit a Pull Request.
 
-## License
-
-This project is licensed under the MIT License.
 
 ## Contact
 
